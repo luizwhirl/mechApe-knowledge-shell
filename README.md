@@ -8,11 +8,11 @@
 
 | # | Responsável | Área principal |
 |---|-------------|---------------|
-| P1 | `@pessoa1` | Motor de inferência & arquitetura geral |
-| P2 | `@pessoa2` | Base de conhecimento & editor de regras |
-| P3 | `@pessoa3` | Mecanismo de explicação & interface com o usuário |
-| P4 | `@pessoa4` | Questão 2 — Sistema A (a definir pelo grupo) |
-| P5 | `@pessoa5` | Questão 2 — Sistema B + Questão 3 (LLM) |
+| P1 | `[Manu](https://github.com/Manu-Vii)` | Motor de inferência & arquitetura geral |
+| P2 | `[Indias](https://github.com/luizwhirl)` | Base de conhecimento & editor de regras |
+| P3 | `[João](https://github.com/BrandaoJatoba)` | Mecanismo de explicação & interface com o usuário |
+| P4 | `[Lucas](https://github.com/lucasqtl)` | Questão 2 — Sistema A (a definir pelo grupo) |
+| P5 | `[Rayssa](https://github.com/rayssar9i)` | Questão 2 — Sistema B + Questão 3 (LLM) |
 
 ---
 
