@@ -1,0 +1,376 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mechape/knowledge_base.schema.json",
+  "title": "MechApe Knowledge Base Schema",
+  "description": "Schema de validação para bases de conhecimento do MechApe Shell. Qualquer domínio que siga este schema pode ser carregado pelo sistema sem alterar o código-fonte.",
+  "type": "object",
+  "required": [
+    "_meta",
+    "facts",
+    "hypotheses",
+    "rules",
+    "session"
+  ],
+  "properties": {
+    "_meta": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "domain"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "domain": {
+          "type": "string",
+          "minLength": 3
+        },
+        "description": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "encoding": {
+          "type": "string"
+        }
+      }
+    },
+    "facts": {
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "attribute",
+              "label",
+              "type",
+              "category",
+              "source"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identificador único do fato. Prefixo F para fatos de usuário, F_INF para inferidos.",
+                "pattern": "^F((_INF)?_?\\d+|\\d+)$"
+              },
+              "attribute": {
+                "type": "string",
+                "description": "Nome snake_case usado internamente pelo motor de inferência.",
+                "pattern": "^[a-z][a-z0-9_]*$"
+              },
+              "label": {
+                "type": "string",
+                "description": "Descrição legível do fato, usada no mecanismo de explicação."
+              },
+              "question": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Texto da pergunta exibida ao usuário. null para fatos inferidos."
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "boolean",
+                  "numeric",
+                  "categorical"
+                ],
+                "description": "Tipo do valor do fato. Atualmente apenas boolean é suportado."
+              },
+              "category": {
+                "type": "string",
+                "description": "Agrupa fatos por tema. Usado pelo editor para organizar a exibição.",
+                "enum": [
+                  "desempenho_execucao",
+                  "launchers",
+                  "software_so",
+                  "overlays",
+                  "hardware",
+                  "inferred"
+                ]
+              },
+              "value": {
+                "description": "Valor atual do fato. null = não avaliado ainda.",
+                "type": [
+                  "boolean",
+                  "number",
+                  "string",
+                  "null"
+                ]
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "user_input",
+                  "inferred"
+                ],
+                "description": "Define de onde vem o valor: perguntado ao usuário ou inferido por uma regra."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "hypotheses": {
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "label",
+              "description",
+              "recommendation"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^H\\d+$",
+                "description": "Identificador único da hipótese."
+              },
+              "label": {
+                "type": "string",
+                "description": "Nome curto da hipótese, exibido no diagnóstico."
+              },
+              "description": {
+                "type": "string",
+                "description": "Explicação completa do que foi diagnosticado."
+              },
+              "recommendation": {
+                "type": "string",
+                "description": "Ação recomendada ao usuário após o diagnóstico."
+              },
+              "confidence": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Reservado para extensão probabilística futura (Redes Bayesianas)."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "required": [
+        "items"
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "minItems": 20,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "label",
+              "conditions",
+              "conclusion",
+              "conclusion_type",
+              "priority",
+              "explanation_why",
+              "explanation_how"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^R\\d+$",
+                "description": "Identificador único da regra."
+              },
+              "label": {
+                "type": "string",
+                "description": "Descrição humana da regra para o editor de base de conhecimento."
+              },
+              "conditions": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "description": "Lista de IDs de fatos (AND implícito). Todos devem ser true para disparar a regra."
+                },
+                "description": "Antecedente da regra: SE todos estes fatos forem verdadeiros..."
+              },
+              "conclusion": {
+                "type": "object",
+                "description": "Consequente da regra: ...ENTÃO este fato ou hipótese é confirmado.",
+                "properties": {
+                  "fact_id": {
+                    "type": "string"
+                  },
+                  "hypothesis_id": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": [
+                      "boolean",
+                      "number",
+                      "string"
+                    ]
+                  }
+                },
+                "oneOf": [
+                  {
+                    "required": [
+                      "fact_id",
+                      "value"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "hypothesis_id",
+                      "value"
+                    ]
+                  }
+                ]
+              },
+              "conclusion_type": {
+                "type": "string",
+                "enum": [
+                  "intermediate",
+                  "hypothesis"
+                ],
+                "description": "intermediate: gera um fato inferido. hypothesis: confirma uma hipótese final."
+              },
+              "priority": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5,
+                "description": "Prioridade de disparo quando múltiplas regras são elegíveis (agenda de conflitos do motor)."
+              },
+              "explanation_why": {
+                "type": "string",
+                "description": "Texto exibido quando o usuário pergunta 'Por quê?' durante a consulta."
+              },
+              "explanation_how": {
+                "type": "string",
+                "description": "Texto exibido quando o usuário pergunta 'Como?' após um diagnóstico."
+              },
+              "fired_count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Contador de disparos — atualizado pelo motor em tempo de execução."
+              },
+              "last_fired": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Timestamp ISO do último disparo — atualizado pelo motor em tempo de execução."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    },
+    "session": {
+      "type": "object",
+      "description": "Estado da sessão ativa. Populado pelo motor (P1) durante a inferência. Zerado entre consultas.",
+      "properties": {
+        "session_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "started_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "strategy": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "forward",
+            "backward",
+            "hybrid",
+            null
+          ]
+        },
+        "facts_confirmed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "facts_denied": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "facts_unknown": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "facts_inferred": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rules_fired": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "hypotheses_confirmed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "hypotheses_rejected": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "current_goal": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "questions_asked": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}
