@@ -180,4 +180,4 @@
 ---
 
 > [!note] 
-> Os sistemas de diagnóstico médico desenvolvidos neste projeto têm finalidade exclusivamente educacional e não devem ser utilizados como ferramentas reais de diagnóstico.
+> Os sistemas de diagnóstico desenvolvidos neste projeto têm finalidade exclusivamente educacional e não devem ser utilizados como ferramentas reais de diagnóstico.
