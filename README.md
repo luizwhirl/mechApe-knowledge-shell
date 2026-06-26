@@ -18,33 +18,33 @@ Ferramenta genérica para construção de aplicações baseadas em conhecimento 
 
 #### Módulo 1 - Editor da Base de Conhecimento `P2`
 
-- [x] Cadastro de fatos
-- [x] Cadastro de regras no formato `SE condição1 E condição2 ENTÃO conclusão`
-- [x] Edição de regras existentes
-- [x] Remoção de regras
-- [x] Persistência da base em arquivo JSON
-- [x] Carregamento da base a partir de arquivo externo sem alterar código-fonte
+- ☑️ Cadastro de fatos
+- ☑️ Cadastro de regras no formato `SE condição1 E condição2 ENTÃO conclusão`
+- ☑️ Edição de regras existentes
+- ☑️ Remoção de regras
+- ☑️ Persistência da base em arquivo JSON
+- ☑️ Carregamento da base a partir de arquivo externo sem alterar código-fonte
 
 Implementado em [q1/editor.py](q1/editor.py). O editor mantém a base no formato JSON validado pelo schema e permite uso por comandos ou por menu interativo.
 
 #### Módulo 2 - Base de Conhecimento `P2`
 
-- [x] Estrutura para armazenar fatos iniciais
-- [x] Estrutura para armazenar fatos inferidos
-- [x] Estrutura para armazenar regras de produção
-- [x] Estrutura para armazenar hipóteses / objetivos de diagnóstico
+- ☑️ Estrutura para armazenar fatos iniciais
+- ☑️ Estrutura para armazenar fatos inferidos
+- ☑️ Estrutura para armazenar regras de produção
+- ☑️ Estrutura para armazenar hipóteses / objetivos de diagnóstico
 
 Base demonstrativa em [q1/tests/knowledge_base.json](q1/tests/knowledge_base.json), com 31 fatos de entrada, 2 fatos inferidos, 21 regras e 7 hipóteses.
 
 #### Módulo 3 - Motor de Inferência `P1`
 
-- [x] Encadeamento para frente (Forward Chaining)
-- [x] Encadeamento para trás (Backward Chaining)
-- [x] Estratégia híbrida (Forward + Backward)
-- [x] Identificação de regras disparáveis
-- [x] Resolução de objetivos de diagnóstico
-- [x] Solicitação de informações adicionais ao usuário quando necessário
-- [x] Integração com a base de conhecimento
+- ☑️ Encadeamento para frente (Forward Chaining)
+- ☑️ Encadeamento para trás (Backward Chaining)
+- ☑️ Estratégia híbrida (Forward + Backward)
+- ☑️ Identificação de regras disparáveis
+- ☑️ Resolução de objetivos de diagnóstico
+- ☑️ Solicitação de informações adicionais ao usuário quando necessário
+- ☑️ Integração com a base de conhecimento
 
 #### Módulo 4 - Mecanismo de Explicação `P3`
 
@@ -63,10 +63,10 @@ Base demonstrativa em [q1/tests/knowledge_base.json](q1/tests/knowledge_base.jso
 
 #### Aplicação Demonstrativa
 
-- [x] Domínio escolhido: suporte técnico / diagnóstico de erros e performance em jogos de PC
-- [x] Base com pelo menos 20 regras
-- [x] Base com pelo menos 30 fatos possíveis
-- [x] Base com pelo menos 5 hipóteses / diagnósticos distintos
+- ☑️ Domínio escolhido: suporte técnico / diagnóstico de erros e performance em jogos de PC
+- ☑️ Base com pelo menos 20 regras
+- ☑️ Base com pelo menos 30 fatos possíveis
+- ☑️ Base com pelo menos 5 hipóteses / diagnósticos distintos
 - [ ] Demonstração de pelo menos 3 consultas diferentes
 
 ## Editor da Base de Conhecimento
