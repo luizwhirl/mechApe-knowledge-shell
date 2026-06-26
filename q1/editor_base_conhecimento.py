@@ -11,12 +11,13 @@ import argparse
 import json
 import re
 import shutil
+import sys
+import time
 from copy import deepcopy
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-
 
 DEFAULT_KB_PATH = Path(__file__).parent / "tests" / "knowledge_base.json"
 FACT_ID_RE = re.compile(r"^F(?:(?:_INF)?_?\d+|\d+)$")
@@ -38,6 +39,45 @@ FACT_CATEGORIES = {
 }
 FACT_TYPES = {"boolean", "numeric", "categorical"}
 FACT_SOURCES = {"user_input", "inferred"}
+
+# ==============================================================================
+# CONFIGURAÇÕES DE INTERFACE RETRÔ
+# ==============================================================================
+AZUL = "\033[0;34m"
+AZUL_BRILHANTE = "\033[1;34m"
+REVERSE = "\033[7m"
+RESET = "\033[0m"
+
+def print_retro(texto: str, atraso: float = 0.005, nova_linha: bool = True):
+    """Imprime o texto com um leve efeito de digitação de terminal antigo."""
+    for caractere in texto:
+        sys.stdout.write(caractere)
+        sys.stdout.flush()
+        time.sleep(atraso)
+    if nova_linha:
+        print()
+
+def exibir_cabecalho():
+    print(AZUL)
+    print("============================================================")
+    print(" ███▄ ▄███▓▓█████  ▄████▄   ██░ ██  ▄▄▄       ██▓███  ▓█████ ")
+    print(" ▓██▒▀█▀ ██▒▓█   ▀ ▒██▀ ▀█  ▓██░ ██▒▒████▄    ▓██░  ██▒▓█   ▀ ")
+    print(" ▓██    ▓██░▒███   ▒▓█    ▄ ▒██▀▀██░▒██  ▀█▄  ▓██░ ██▓▒▒███   ")
+    print(" ▒██    ▒██ ▒▓█  ▄ ▒▓▓▄ ▄██▒░██ ░██ ░██▄▄▄▄██ ▒██▄█▓▒ ▒▒▓█  ▄ ")
+    print(" ▒██▒   ░██▒░▒████▒▒ ▓███▀ ░░██ ▒██▒ ▓█   ▓██▒▒██▒ ░  ░░▒████▒")
+    print(" ░ ▒░   ░  ░░░ ▒░ ░░ ░▒ ▒  ░░ ▒ ░▒░ ░▒▒   ▓▒█░▒▓ ░      ░░ ▒░ ░")
+    print("                                                            ")
+    print("   ███████╗██████╗ ██╗████████╗██████╗ ██████╗              ")
+    print("   ██╔════╝██╔══██╗██║╚══██╔══╝██╔══██╗██╔══██╗             ")
+    print("   █████╗  ██║  ██║██║   ██║   ██║  ██║██████╔╝             ")
+    print("   ██╔══╝  ██║  ██║██║   ██║   ██║  ██║██╔══██╗             ")
+    print("   ███████╗██████╔╝██║   ██║   ╚██████╔╝██║  ██║            ")
+    print("   ╚══════╝╚═════╝ ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝            ")
+    print("============================================================")
+    print("      MECHAPE KNOWLEDGE EDITOR - OS VERSION 2026.06         ")
+    print("============================================================")
+    print(RESET)
+# ==============================================================================
 
 
 class EditorError(ValueError):
@@ -592,99 +632,118 @@ def run_interactive(editor: KnowledgeBaseEditor, *, backup: bool) -> None:
         "0": "exit",
     }
     while True:
-        print("\nEditor da Base de Conhecimento")
-        print("1. Listar fatos")
-        print("2. Listar regras")
-        print("3. Cadastrar fato")
-        print("4. Editar fato")
-        print("5. Remover fato")
-        print("6. Cadastrar regra")
-        print("7. Editar regra")
-        print("8. Remover regra")
-        print("9. Validar integridade")
-        print("0. Sair")
-        choice = input("Opcao: ").strip()
+        sys.stdout.write("\033[H\033[2J") # Limpa a tela do terminal de forma limpa
+        exibir_cabecalho()
+        
+        print(f"{AZUL_BRILHANTE}  1. Listar fatos{RESET}")
+        print(f"{AZUL_BRILHANTE}  2. Listar regras{RESET}")
+        print(f"{AZUL_BRILHANTE}  3. Cadastrar fato{RESET}")
+        print(f"{AZUL_BRILHANTE}  4. Editar fato{RESET}")
+        print(f"{AZUL_BRILHANTE}  5. Remover fato{RESET}")
+        print(f"{AZUL_BRILHANTE}  6. Cadastrar regra{RESET}")
+        print(f"{AZUL_BRILHANTE}  7. Editar regra{RESET}")
+        print(f"{AZUL_BRILHANTE}  8. Remover regra{RESET}")
+        print(f"{AZUL_BRILHANTE}  9. Validar integridade{RESET}")
+        print(f"{AZUL}  0. Sair (Desligar Terminal){RESET}\n")
+        
+        choice = input(f"{AZUL}SELECIONE UMA OPÇÃO DO EDITOR_> {RESET}").strip()
         action = actions.get(choice)
+        
         if action == "exit":
-            return
+            print_retro(f"\n{AZUL}[SISTEMA]: Finalizando buffers do editor... Desligando. Adeus.{RESET}")
+            break
+        
         try:
             if action == "list_facts":
+                print_retro(f"\n{AZUL_BRILHANTE}--- FATOS CADASTRADOS ---{RESET}")
                 for fact in editor.facts:
-                    print(f"{fact['id']} | {fact['attribute']} | {fact['label']}")
+                    print(f"{AZUL}{fact['id']} | {fact['attribute']} | {fact['label']}{RESET}")
             elif action == "list_rules":
+                print_retro(f"\n{AZUL_BRILHANTE}--- REGRAS CADASTRADAS ---{RESET}")
                 for rule in editor.rules:
-                    print(_format_rule(rule))
+                    print(f"{AZUL}{_format_rule(rule)}{RESET}")
             elif action == "add_fact":
+                print_retro(f"\n{AZUL_BRILHANTE}[SISTEMA]: Iniciando cadastro de fato...{RESET}")
                 fact = editor.add_fact(
-                    fact_id=input("ID (vazio = automatico): ").strip() or None,
-                    attribute=input("Attribute snake_case: ").strip(),
-                    label=input("Rotulo: ").strip(),
-                    question=input("Pergunta (vazio para inferido): ").strip() or None,
-                    category=input("Categoria: ").strip() or "desempenho_execucao",
-                    source=input("Fonte [user_input/inferred]: ").strip() or "user_input",
+                    fact_id=input(f"{AZUL}ID (vazio = automático): {RESET}").strip() or None,
+                    attribute=input(f"{AZUL}Attribute snake_case: {RESET}").strip(),
+                    label=input(f"{AZUL}Rótulo: {RESET}").strip(),
+                    question=input(f"{AZUL}Pergunta (vazio para inferido): {RESET}").strip() or None,
+                    category=input(f"{AZUL}Categoria: {RESET}").strip() or "desempenho_execucao",
+                    source=input(f"{AZUL}Fonte [user_input/inferred]: {RESET}").strip() or "user_input",
                 )
                 editor.save(backup=backup)
-                print(f"Fato cadastrado: {fact['id']}")
+                print_retro(f"{AZUL_BRILHANTE}[SUCESSO]: Fato cadastrado com ID: {fact['id']}{RESET}")
             elif action == "edit_fact":
-                fact_id = input("ID do fato: ").strip()
+                print_retro(f"\n{AZUL_BRILHANTE}[SISTEMA]: Editando fato existente...{RESET}")
+                fact_id = input(f"{AZUL}ID do fato: {RESET}").strip()
                 fact = editor.get_fact(fact_id)
                 updates = {
-                    "attribute": input(f"Attribute [{fact['attribute']}]: ").strip() or None,
-                    "label": input(f"Rotulo [{fact['label']}]: ").strip() or None,
-                    "question": input(f"Pergunta [{fact.get('question')}]: ").strip() or None,
-                    "category": input(f"Categoria [{fact['category']}]: ").strip() or None,
-                    "source": input(f"Fonte [{fact['source']}]: ").strip() or None,
+                    "attribute": input(f"{AZUL}Attribute [{fact['attribute']}]: {RESET}").strip() or None,
+                    "label": input(f"{AZUL}Rótulo [{fact['label']}]: {RESET}").strip() or None,
+                    "question": input(f"{AZUL}Pergunta [{fact.get('question')}]: {RESET}").strip() or None,
+                    "category": input(f"{AZUL}Categoria [{fact['category']}]: {RESET}").strip() or None,
+                    "source": input(f"{AZUL}Fonte [{fact['source']}]: {RESET}").strip() or None,
                 }
                 editor.edit_fact(fact_id, **updates)
                 editor.save(backup=backup)
-                print(f"Fato editado: {fact_id}")
+                print_retro(f"{AZUL_BRILHANTE}[SUCESSO]: Fato {fact_id} editado.{RESET}")
             elif action == "remove_fact":
+                print_retro(f"\n{AZUL_BRILHANTE}[SISTEMA]: Removendo fato existente...{RESET}")
                 report = editor.remove_fact(
-                    input("ID do fato: ").strip(),
-                    force=input("Remover regras dependentes? [s/N]: ").strip().lower() == "s",
+                    input(f"{AZUL}ID do fato: {RESET}").strip(),
+                    force=input(f"{AZUL}Remover regras dependentes? [s/N]: {RESET}").strip().lower() == "s",
                 )
                 editor.save(backup=backup)
-                print(f"Fato removido: {report.removed_id}")
+                print_retro(f"{AZUL_BRILHANTE}[SUCESSO]: Fato removido: {report.removed_id}{RESET}")
                 if report.removed_rules:
-                    print(f"Regras dependentes removidas: {', '.join(report.removed_rules)}")
+                    print_retro(f"{AZUL_BRILHANTE}[AVISO]: Regras dependentes removidas: {', '.join(report.removed_rules)}{RESET}")
             elif action == "add_rule":
+                print_retro(f"\n{AZUL_BRILHANTE}[SISTEMA]: Iniciando cadastro de regra...{RESET}")
                 rule = editor.add_rule_from_text(
-                    input("Regra (SE F01 E F02 ENTAO H1=true): ").strip(),
-                    label=input("Rotulo: ").strip() or None,
-                    priority=int(input("Prioridade [1-5]: ").strip() or "1"),
-                    explanation_why=input("Explicacao Por que?: ").strip(),
-                    explanation_how=input("Explicacao Como?: ").strip(),
+                    input(f"{AZUL}Regra (SE F01 E F02 ENTÃO H1=true): {RESET}").strip(),
+                    label=input(f"{AZUL}Rótulo: {RESET}").strip() or None,
+                    priority=int(input(f"{AZUL}Prioridade [1-5]: {RESET}").strip() or "1"),
+                    explanation_why=input(f"{AZUL}Explicação Por que?: {RESET}").strip(),
+                    explanation_how=input(f"{AZUL}Explicação Como?: {RESET}").strip(),
                 )
                 editor.save(backup=backup)
-                print(f"Regra cadastrada: {rule['id']}")
+                print_retro(f"{AZUL_BRILHANTE}[SUCESSO]: Regra cadastrada com ID: {rule['id']}{RESET}")
             elif action == "edit_rule":
-                rule_id = input("ID da regra: ").strip()
+                print_retro(f"\n{AZUL_BRILHANTE}[SISTEMA]: Editando regra existente...{RESET}")
+                rule_id = input(f"{AZUL}ID da regra: {RESET}").strip()
                 rule = editor.get_rule(rule_id)
-                conditions = input(f"Condicoes CSV [{','.join(rule['conditions'])}]: ").strip()
+                conditions = input(f"{AZUL}Condições CSV [{','.join(rule['conditions'])}]: {RESET}").strip()
                 current_target = rule["conclusion"].get("fact_id") or rule["conclusion"].get(
                     "hypothesis_id"
                 )
                 updates = {
                     "conditions": _csv(conditions),
-                    "conclusion_id": input(f"Conclusao [{current_target}]: ").strip() or None,
-                    "label": input(f"Rotulo [{rule['label']}]: ").strip() or None,
-                    "explanation_why": input("Explicacao Por que? [manter]: ").strip() or None,
-                    "explanation_how": input("Explicacao Como? [manter]: ").strip() or None,
+                    "conclusion_id": input(f"{AZUL}Conclusão [{current_target}]: {RESET}").strip() or None,
+                    "label": input(f"{AZUL}Rótulo [{rule['label']}]: {RESET}").strip() or None,
+                    "explanation_why": input(f"{AZUL}Explicação Por que? [manter]: {RESET}").strip() or None,
+                    "explanation_how": input(f"{AZUL}Explicação Como? [manter]: {RESET}").strip() or None,
                 }
                 editor.edit_rule(rule_id, **updates)
                 editor.save(backup=backup)
-                print(f"Regra editada: {rule_id}")
+                print_retro(f"{AZUL_BRILHANTE}[SUCESSO]: Regra {rule_id} editada.{RESET}")
             elif action == "remove_rule":
-                removed = editor.remove_rule(input("ID da regra: ").strip())
+                print_retro(f"\n{AZUL_BRILHANTE}[SISTEMA]: Removendo regra existente...{RESET}")
+                removed = editor.remove_rule(input(f"{AZUL}ID da regra: {RESET}").strip())
                 editor.save(backup=backup)
-                print(f"Regra removida: {removed['id']}")
+                print_retro(f"{AZUL_BRILHANTE}[SUCESSO]: Regra {removed['id']} removida.{RESET}")
             elif action == "validate":
+                print_retro(f"\n{AZUL_BRILHANTE}[SISTEMA]: Iniciando validação de integridade...{RESET}")
                 editor.validate_integrity()
-                print("Integridade valida.")
-            else:
-                print("Opcao invalida.")
+                print_retro(f"{AZUL_BRILHANTE}[SUCESSO]: Integridade válida. Todas as referências estão corretas.{RESET}")
+            elif action is None:
+                print(f"{AZUL}[ERRO]: Opção inválida.{RESET}")
         except EditorError as error:
-            print(f"Erro: {error}")
+            print(f"\n{AZUL_BRILHANTE}[ERRO DE OPERAÇÃO]: {error}{RESET}")
+        
+        # Pausa antes de limpar a tela e voltar ao menu
+        if action:
+            input(f"\n{AZUL}Pressione [ENTER] para retornar ao menu principal...{RESET}")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -798,4 +857,7 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except KeyboardInterrupt:
+        print(f"\n{AZUL}[SISTEMA]: Interrupção forçada pelo operador. Encerrando o Editor.{RESET}")
