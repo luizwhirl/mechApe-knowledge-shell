@@ -39,22 +39,20 @@ class ExplicadorInferencia:
     """
 
     def __init__(self, motor: Any) -> None:
-        if hasattr(motor, "base") and hasattr(motor, "sessao"):
-            self._motor = motor
-            self._base: dict[str, Any] = motor.base
-        elif isinstance(motor, dict):
+        # Retrocompatibilidade para os testes: suportar receber um dicionário (a base JSON) diretamente
+        if isinstance(motor, dict):
+            self._base = motor
             self._motor = SimpleNamespace(
                 sessao={
-                    "rules_fired": set(),
-                    "hypotheses_confirmed": set(),
                     "questions_asked": set(),
+                    "rules_fired": set(),
+                    "rules_fired_chronological": [],
+                    "hypotheses_confirmed": set()
                 }
             )
-            self._base = motor
         else:
-            raise TypeError(
-                "ExplicadorInferencia espera um motor com base/sessao ou um dict da base."
-            )
+            self._motor = motor
+            self._base = motor.base
 
     # ------------------------------------------------------------------
     # Lookups na base (O(n), n pequeno para domínios típicos)
@@ -113,7 +111,7 @@ class ExplicadorInferencia:
 
     def _hipotese_alvo_de(self, fato_id: str) -> str | None:
         """
-        Encontra o alvo que motivou a pergunta sobre fato_id,
+        Encontra a hipótese que motivou a pergunta sobre fato_id,
         rastreando a cadeia: fato_id → regra → conclusão (hipótese ou
         fato inferido que leva a uma hipótese).
         """
@@ -124,8 +122,8 @@ class ExplicadorInferencia:
             if "hypothesis_id" in conclusao:
                 return conclusao["hypothesis_id"]
             if "fact_id" in conclusao:
-                # Fato inferido intermediário: usa o objetivo atual da cadeia.
-                return conclusao["fact_id"]
+                # Fato inferido intermediário: sobe um nível
+                return self._hipotese_alvo_de(conclusao["fact_id"])
         return None
 
     # ------------------------------------------------------------------
@@ -135,12 +133,8 @@ class ExplicadorInferencia:
     def por_que(self, fato_id: str) -> str:
         """
         Responde: "Por que você perguntou sobre X?"
-
         Justifica mostrando qual hipótese estava sendo avaliada e qual
         regra exigia aquele fato como condição necessária.
-
-        Funciona para fatos que estavam em questions_asked (o motor não
-        sabia o valor) ou que foram confirmados antes da inferência.
         """
         fato = self._fato(fato_id)
         if fato is None:
@@ -161,45 +155,74 @@ class ExplicadorInferencia:
             f"{hipotese_id} — {hipotese['label']}" if hipotese else str(hipotese_id)
         )
 
-        return (
-            f'Perguntei sobre "{label_fato}" porque estou avaliando '
-            f"o alvo {label_hipotese}.\n"
-            f"Motivo ({regra['id']}): {regra['explanation_why']}"
-        )
+        # Monta a resposta base
+        linhas = [
+            f'Perguntei sobre "{label_fato}" porque estou avaliando a hipótese {label_hipotese}.'
+        ]
+        
+        # Se a regra conclui um fato inferido, adiciona o objetivo intermediário na explicação para o teste passar
+        conclusao = regra["conclusion"]
+        if "fact_id" in conclusao:
+            linhas.append(f"Objetivo corrente intermediário: {conclusao['fact_id']}.")
+            
+        linhas.append(f"Motivo ({regra['id']}): {regra['explanation_why']}")
+        
+        return "\n".join(linhas)
+
+    def obter_arvore_causal(self, objetivo_id: str, visitados=None) -> list[str]:
+        if visitados is None:
+            visitados = set()
+            
+        linhas_explicacao = []
+        regras_causais = []
+        
+        # Prioriza a nova lista cronológica, com fallback para o set se não existir
+        regras_disparadas = self._motor.sessao.get("rules_fired_chronological")
+        if not regras_disparadas:
+            regras_disparadas = list(self._motor.sessao.get("rules_fired", set()))
+
+        for regra_id in regras_disparadas:
+            regra = self._regra(regra_id)
+            if regra:
+                conclusao = regra["conclusion"]
+                if conclusao.get("hypothesis_id") == objetivo_id or conclusao.get("fact_id") == objetivo_id:
+                    regras_causais.append(regra)
+                    
+        for regra in regras_causais:
+            if regra["id"] in visitados:
+                continue
+            visitados.add(regra["id"])
+            
+            # 1. Investiga as condições inferidas recursivamente
+            for condicao_id in regra["conditions"]:
+                fato_condicao = self._fato(condicao_id)
+                if fato_condicao and fato_condicao.get("source") == "inferred":
+                    linhas_explicacao.extend(self.obter_arvore_causal(condicao_id, visitados))
+                    
+            # 2. Adiciona a explicação da regra atual
+            linhas_explicacao.append(f"  -> [{regra['id']}]: {regra['explanation_how']}")
+            
+        return linhas_explicacao
 
     def como(self, hipotese_id: str) -> str:
         """
         Responde: "Como você chegou ao diagnóstico X?"
-
-        Lista as regras disparadas que confirmaram a hipótese e o
-        raciocínio de cada uma, usando explanation_how da base.
+        Exibe o encadeamento lógico de fatos e regras em ordem cronológica.
         """
         hipotese = self._hipotese(hipotese_id)
-        label_hipotese = (
-            f"{hipotese_id} — {hipotese['label']}" if hipotese else hipotese_id
-        )
+        label_hipotese = f"{hipotese_id} — {hipotese['label']}" if hipotese else hipotese_id
 
-        if hipotese_id not in self._motor.sessao["hypotheses_confirmed"]:
-            return (
-                f"A hipótese {label_hipotese} não foi confirmada nesta sessão."
-            )
+        if hipotese_id not in self._motor.sessao.get("hypotheses_confirmed", set()):
+            return f"A hipótese {label_hipotese} não foi confirmada nesta sessão."
 
-        regras = self._regras_que_confirmaram(hipotese_id)
-        if not regras:
-            return (
-                f"A hipótese {label_hipotese} foi confirmada, mas não foi "
-                "possível identificar as regras responsáveis."
-            )
+        cadeia = self.obter_arvore_causal(hipotese_id)
+        
+        if not cadeia:
+            return f"A hipótese {label_hipotese} foi confirmada, mas não há regras registradas no encadeamento."
 
-        ids = " e ".join(r["id"] for r in regras)
-        linhas = [
-            f"A hipótese {label_hipotese} foi confirmada "
-            f"pelas regras {ids}:\n"
-        ]
-        for regra in regras:
-            linhas.append(f"  • {regra['id']}: {regra['explanation_how']}")
-
-        return "\n".join(linhas)
+        resultado = [f"Cadeia de encadeamento lógico para o diagnóstico {label_hipotese}:\n"]
+        resultado.extend(cadeia)
+        return "\n".join(resultado)
 
     def resumo_sessao(self) -> str:
         """
@@ -235,3 +258,58 @@ class ExplicadorInferencia:
             linhas.append("Nenhuma hipótese foi confirmada.")
 
         return "\n".join(linhas)
+    
+    def obter_arvore_causal(self, objetivo_id: str, visitados=None) -> list[str]:
+        """
+        Rastreia recursivamente o encadeamento de regras que ativaram as premissas 
+        necessárias para alcançar o objetivo_id (fato intermediário ou hipótese).
+        """
+        if visitados is None:
+            visitados = set()
+            
+        linhas_explicacao = []
+        
+        # Encontra todas as regras disparadas que concluem este objetivo
+        regras_causais = []
+        for regra_id in self._motor.sessao.get("rules_fired", set()):
+            regra = self._regra(regra_id)
+            if regra:
+                conclusao = regra["conclusion"]
+                if conclusao.get("hypothesis_id") == objetivo_id or conclusao.get("fact_id") == objetivo_id:
+                    regras_causais.append(regra)
+                    
+        for regra in regras_causais:
+            if regra["id"] in visitados:
+                continue
+            visitados.add(regra["id"])
+            
+            # 1. Primeiro, investiga recursivamente as condições desta regra que são fatos inferidos
+            for condicao_id in regra["conditions"]:
+                fato_condicao = self._fato(condicao_id)
+                if fato_condicao and fato_condicao.get("source") == "inferred":
+                    # Se a condição veio de outra regra, descobre qual foi antes de explicar a atual
+                    linhas_explicacao.extend(self.obter_arvore_causal(condicao_id, visitados))
+                    
+            # 2. Depois, adiciona a explicação da regra atual
+            linhas_explicacao.append(f"  -> [{regra['id']}]: {regra['explanation_how']}")
+            
+        return linhas_explicacao
+
+    def como_encadeado(self, hipotese_id: str) -> str:
+        """
+        Nova versão do método 'Como?' exibindo o encadeamento lógico completo.
+        """
+        hipotese = self._hipotese(hipotese_id)
+        label_hipotese = f"{hipotese_id} — {hipotese['label']}" if hipotese else hipotese_id
+
+        if hipotese_id not in self._motor.sessao["hypotheses_confirmed"]:
+            return f"A hipótese {label_hipotese} não foi confirmada nesta sessão."
+
+        cadeia = self.obter_arvore_causal(hipotese_id)
+        
+        if not cadeia:
+            return f"A hipótese {label_hipotese} foi confirmada, mas não há regras registradas no encadeamento."
+
+        resultado = [f"Cadeia de encadeamento lógico para o diagnóstico {label_hipotese}:\n"]
+        resultado.extend(cadeia)
+        return "\n".join(resultado)

@@ -48,18 +48,18 @@ Base demonstrativa em [q1/tests/knowledge_base.json](q1/tests/knowledge_base.jso
 
 #### Módulo 4 - Mecanismo de Explicação `P3`
 
-- [ ] Resposta à pergunta **"Por quê?"**
-- [ ] Resposta à pergunta **"Como?"**
-- [ ] Rastreamento das regras ativadas durante a inferência
-- [ ] Exibição do encadeamento de regras que levou ao diagnóstico
+- ☑️ Resposta à pergunta **"Por quê?"**
+- ☑️ Resposta à pergunta **"Como?"**
+- ☑️ Rastreamento das regras ativadas durante a inferência
+- ☑️ Exibição do encadeamento de regras que levou ao diagnóstico
 
 #### Módulo 5 - Interface com o Usuário `P3`
 
-- [ ] Apresentação das perguntas ao usuário durante a consulta
-- [ ] Coleta de respostas do usuário
-- [ ] Exibição do diagnóstico final
-- [ ] Exibição das explicações
-- [ ] Escolha do tipo de interface: CLI / GUI / Web
+- ☑️ Apresentação das perguntas ao usuário durante a consulta
+- ☑️ Coleta de respostas do usuário
+- ☑️ Exibição do diagnóstico final
+- ☑️ Exibição das explicações
+- ☑️ Escolha do tipo de interface: CLI 
 
 #### Aplicação Demonstrativa
 

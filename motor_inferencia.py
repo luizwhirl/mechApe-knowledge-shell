@@ -25,6 +25,7 @@ class MotorInferencia:
             "facts_unknown": set(),
             "facts_inferred": set(),
             "rules_fired": set(),
+            "rules_fired_chronological": [], # NOVA LISTA para rastreamento ordenado
             "hypotheses_confirmed": set(),
             "current_goal": None,
             "questions_asked": set()
@@ -45,6 +46,8 @@ class MotorInferencia:
                 if id_regra not in self.sessao["rules_fired"]:
                     if self._condicoes_satisfeitas(regra["conditions"]):
                         self.sessao["rules_fired"].add(id_regra)
+                        if id_regra not in self.sessao["rules_fired_chronological"]:
+                            self.sessao["rules_fired_chronological"].append(id_regra)
                         conclusao = regra["conclusion"]
                         
                         # Adiciona à lista correspondente (fato inferido ou hipótese final)
