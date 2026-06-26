@@ -1,10 +1,17 @@
 import json
+from pathlib import Path
 
 class MotorInferencia:
-    def __init__(self, caminho_base="knowledge_base.json"):
+    def __init__(self, caminho_base="knowledge_base.json", explicador=None):
         # Carregando a estrutura exata do JSON
-        with open(caminho_base, 'r', encoding='utf-8') as f:
+        caminho = Path(caminho_base)
+        if not caminho.is_absolute():
+            caminho = (Path(__file__).resolve().parent / caminho).resolve()
+        with open(caminho, 'r', encoding='utf-8') as f:
             self.base = json.load(f)
+        self.explicador = explicador
+        if explicador is not None:
+            explicador._motor = self
         
         self.regras = self.base.get("rules", {}).get("items", [])
         self.hipoteses = self.base.get("hypotheses", {}).get("items", [])
