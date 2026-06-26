@@ -4,6 +4,58 @@
 
 ---
 
+## Modulo 1 - Editor CRUD da Base de Conhecimento
+
+O projeto agora possui um editor funcional para manter a base sem editar o JSON
+manualmente, conforme o enunciado da Questao 1. O script fica em
+`q1/editor_base_conhecimento.py` e permite cadastrar, editar, remover, listar e
+validar fatos e regras com persistencia em arquivo JSON externo.
+
+Abrir o menu interativo:
+
+```bash
+python q1/editor_base_conhecimento.py --base q1/tests/knowledge_base.json interactive
+```
+
+Exemplos de uso direto por comando:
+
+```bash
+# cadastrar fato
+python q1/editor_base_conhecimento.py --base q1/tests/knowledge_base.json add-fact \
+  --attribute uso_vram_alto \
+  --label "Uso de VRAM acima do limite recomendado" \
+  --question "O monitoramento mostra uso de VRAM acima de 95%?" \
+  --category hardware
+
+# cadastrar regra no formato SE ... E ... ENTAO ...
+python q1/editor_base_conhecimento.py --base q1/tests/knowledge_base.json add-rule \
+  --text "SE F02 E F25 ENTAO H1=true" \
+  --label "Stuttering com overlay de GPU indica conflito de overlay" \
+  --priority 2 \
+  --why "Estou avaliando conflito de overlay em queda de FPS." \
+  --how "A regra foi ativada por queda de FPS e overlay de GPU ativo."
+
+# editar regra existente
+python q1/editor_base_conhecimento.py --base q1/tests/knowledge_base.json edit-rule R03 \
+  --conditions F02,F25 \
+  --priority 3
+
+# remover regra
+python q1/editor_base_conhecimento.py --base q1/tests/knowledge_base.json remove-rule R03
+
+# remover fato; se estiver em uso por regras, exige --force
+python q1/editor_base_conhecimento.py --base q1/tests/knowledge_base.json remove-fact F23 --force
+
+# validar integridade referencial da base
+python q1/editor_base_conhecimento.py --base q1/tests/knowledge_base.json validate
+```
+
+Por padrao, cada alteracao cria uma copia de seguranca `.bak-AAAAMMDDHHMMSS`
+antes de salvar. Para testes automatizados ou demonstracoes descartaveis, use
+`--no-backup`.
+
+---
+
 ## Equipe e Distribuição de Tarefas
 
 | # | Responsável | Área principal |
@@ -21,12 +73,12 @@
 ### Questão 1 — Shell de Sistema Especialista (0–5 pts)
 
 #### Módulo 1 — Editor da Base de Conhecimento `P2`
-- [ ] Cadastro de fatos
-- [ ] Cadastro de regras no formato `SE condição1 E condição2 ENTÃO conclusão`
-- [ ] Edição de regras existentes
-- [ ] Remoção de regras
-- [ ] Persistência da base em arquivo (JSON / YAML / banco de dados)
-- [ ] Carregamento da base a partir de arquivo externo (sem alterar código-fonte)
+- [x] Cadastro de fatos
+- [x] Cadastro de regras no formato `SE condição1 E condição2 ENTÃO conclusão`
+- [x] Edição de regras existentes
+- [x] Remoção de regras
+- [x] Persistência da base em arquivo (JSON / YAML / banco de dados)
+- [x] Carregamento da base a partir de arquivo externo (sem alterar código-fonte)
 
 #### Módulo 2 — Base de Conhecimento `P2`
 - [ ] Estrutura para armazenar fatos iniciais
