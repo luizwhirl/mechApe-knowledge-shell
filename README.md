@@ -35,13 +35,13 @@
 - [ ] Estrutura para armazenar hipóteses / objetivos de diagnóstico
 
 #### Módulo 3 — Motor de Inferência `P1`
-- [ ] Encadeamento para frente (Forward Chaining)
-- [ ] Encadeamento para trás (Backward Chaining)
-- [ ] Estratégia híbrida (Forward + Backward)
-- [ ] Identificação de regras disparáveis (agenda de conflitos)
-- [ ] Resolução de objetivos de diagnóstico
-- [ ] Solicitação de informações adicionais ao usuário quando necessário
-- [ ] Integração com os módulos de base e explicação
+- [x] Encadeamento para frente (Forward Chaining)
+- [x] Encadeamento para trás (Backward Chaining)
+- [x] Estratégia híbrida (Forward + Backward)
+- [x] Identificação de regras disparáveis (agenda de conflitos)
+- [x] Resolução de objetivos de diagnóstico
+- [x] Solicitação de informações adicionais ao usuário quando necessário
+- [x] Integração com os módulos de base e explicação
 
 #### Módulo 4 — Mecanismo de Explicação `P3`
 - [ ] Resposta à pergunta **"Por quê?"** — justificar por que determinada pergunta foi feita
