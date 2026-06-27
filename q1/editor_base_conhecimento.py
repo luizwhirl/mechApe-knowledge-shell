@@ -644,6 +644,7 @@ def run_interactive(editor: KnowledgeBaseEditor, *, backup: bool) -> None:
         "7": "edit_rule",
         "8": "remove_rule",
         "9": "validate",
+        "10": "return_main",
         "0": "exit",
     }
     while True:
@@ -659,13 +660,19 @@ def run_interactive(editor: KnowledgeBaseEditor, *, backup: bool) -> None:
         print(f"{AZUL_BRILHANTE}  7. Editar regra{RESET}")
         print(f"{AZUL_BRILHANTE}  8. Remover regra{RESET}")
         print(f"{AZUL_BRILHANTE}  9. Validar integridade{RESET}")
-        print(f"{AZUL}  0. Sair (Desligar Terminal){RESET}\n")
+        print(f"{AZUL_BRILHANTE}  10. Voltar ao Menu Principal{RESET}")
+        print(f"{AZUL}  0. Desligar Terminal{RESET}\n")
         
         choice = input(f"{AZUL}SELECIONE UMA OPÇÃO DO EDITOR_> {RESET}").strip()
         action = actions.get(choice)
         
         if action == "exit":
-            print_retro(f"\n{AZUL}[SISTEMA]: Finalizando buffers do editor... Desligando. Adeus.{RESET}")
+            print_retro(f"\n{AZUL}[SISTEMA]: Finalizando buffers do editor... Desligando completamente. Adeus.{RESET}")
+            sys.exit(0)
+            
+        elif action == "return_main":
+            print_retro(f"\n{AZUL}[SISTEMA]: Devolvendo controle ao Terminal Principal...{RESET}")
+            time.sleep(0.5)
             break
         
         try:
@@ -777,7 +784,7 @@ def run_interactive(editor: KnowledgeBaseEditor, *, backup: bool) -> None:
             print(f"\n{AZUL_BRILHANTE}[ERRO DE OPERAÇÃO]: {error}{RESET}")
         
         if action:
-            input(f"\n{AZUL}Pressione [ENTER] para retornar ao menu principal...{RESET}")
+            input(f"\n{AZUL}Pressione [ENTER] para continuar...{RESET}")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -895,3 +902,4 @@ if __name__ == "__main__":
         raise SystemExit(main())
     except KeyboardInterrupt:
         print(f"\n{AZUL}[SISTEMA]: Interrupção forçada pelo operador. Encerrando o Editor.{RESET}")
+        sys.exit(0)

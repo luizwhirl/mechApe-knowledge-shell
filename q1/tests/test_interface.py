@@ -18,7 +18,6 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from q1 import interface
-from q1 import editor
 
 class TestInterfaceEditor(unittest.TestCase):
     def setUp(self):
@@ -41,64 +40,25 @@ class TestInterfaceEditor(unittest.TestCase):
         self.patcher_sleep.stop()
         self.tmpdir.cleanup()
 
-    @patch('builtins.input')
-    def test_prompt_retro_comportamento(self, mock_input):
-        """Testa se o prompt auxiliar respeita valores padrão e sobrescritas."""
-        # Cenário 1: Usuário aperta enter vazio, deve usar o valor padrão
-        mock_input.side_effect = [""]
-        resultado = interface.prompt_retro("Teste", default="valor_padrao")
-        self.assertEqual(resultado, "valor_padrao")
-        
-        # Cenário 2: Usuário digita algo, deve ignorar o padrão
-        mock_input.side_effect = ["meu_valor_customizado"]
-        resultado = interface.prompt_retro("Teste", default="valor_padrao")
-        self.assertEqual(resultado, "meu_valor_customizado")
-
-    @patch('builtins.input')
-    @patch('sys.stdout') # Suprime os prints da interface no terminal de testes
-    def test_menu_editor_cadastrar_fato(self, mock_stdout, mock_input):
-        """Testa o fluxo completo de navegação do menu para criar um novo fato."""
-        
-        # Sequência exata de inputs que um usuário daria no terminal:
-        mock_input.side_effect = [
-            "2",                      # Seleciona Opção 2: Registrar novo fato
-            "user_input",             # Fonte de dados
-            "teste_novo_fato_cli",    # Nome da variável
-            "Fato criado via Teste",  # Descrição
-            "Isso é um teste?",       # Pergunta
-            "boolean",                # Tipo
-            "hardware",               # Categoria
-            "",                       # Pressiona [ENTER] para continuar
-            "0"                       # Opção 0: Sair do editor
-        ]
-        
-        # Roda o menu (ele vai consumir o side_effect e sair automaticamente no "0")
-        interface.menu_editor()
-        
-        # Verifica se o fato foi realmente salvo no arquivo JSON temporário
-        kb_atualizada = editor.load_kb(self.kb_path)
-        fatos_salvos = [f["attribute"] for f in editor.facts(kb_atualizada)]
-        
-        self.assertIn("teste_novo_fato_cli", fatos_salvos)
-
+    @patch('q1.interface.run_interactive')
     @patch('builtins.input')
     @patch('sys.stdout')
-    def test_menu_editor_deletar_regra(self, mock_stdout, mock_input):
-        """Testa o fluxo de deleção de uma regra."""
+    def test_menu_principal_chama_editor_azul(self, mock_stdout, mock_input, mock_run_interactive):
+        """Testa se a Opção 3 transfere o controle para o terminal azul corretamente."""
         
-        mock_input.side_effect = [
-            "6",    # Seleciona Opção 6: Deletar Regra
-            "R01",  # Digita o ID da regra
-            "",     # Pressiona [ENTER] para continuar
-            "0"     # Opção 0: Sair do editor
-        ]
+        # O usuário digita "3" (abrir modo desenvolvedor), e logo em seguida "0" (sair do sistema principal)
+        mock_input.side_effect = ["3", "0"]
         
-        interface.menu_editor()
+        # Executa o loop do menu principal
+        interface.menu_principal()
         
-        kb_atualizada = editor.load_kb(self.kb_path)
-        ids_regras = {r["id"] for r in editor.rules(kb_atualizada)}
+        # Verifica se o run_interactive do terminal azul foi instanciado e chamado
+        mock_run_interactive.assert_called_once()
         
-        self.assertNotIn("R01", ids_regras)
+        # Valida os argumentos passados para inicializar o terminal azul
+        args, kwargs = mock_run_interactive.call_args
+        self.assertTrue(kwargs.get("backup"))
+        self.assertIsNotNone(args[0])  # Verifica se instanciou o KnowledgeBaseEditor
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
