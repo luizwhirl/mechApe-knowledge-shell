@@ -17,6 +17,9 @@ Requisitos atendidos:
   - restrições e axiomas (classes definidas por equivalência)
   - indivíduos suficientes (12 obras + gêneros + diretores + plataformas)
   - reasoner OWL 2.0 (HermiT): classificação, relações implícitas, consistência
+
+  para rodar: 
+  python recomendacao.py
 """
 
 from owlready2 import *
