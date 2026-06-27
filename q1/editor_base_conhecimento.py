@@ -77,6 +77,41 @@ def exibir_cabecalho():
     print("      MECHAPE KNOWLEDGE EDITOR - OS VERSION 2026.06         ")
     print("============================================================")
     print(RESET)
+
+def prompt_choice(texto: str, opcoes: list[str], padrao: str | None = None) -> str:
+    """Exibe uma lista de opções numeradas e retorna a escolha do usuário."""
+    print(f"\n{AZUL_BRILHANTE}{texto}{RESET}")
+    for i, op in enumerate(opcoes, 1):
+        marcador = " (Padrão)" if padrao == op else ""
+        print(f"{AZUL}  [{i}] {op}{marcador}{RESET}")
+    
+    while True:
+        sufixo = f" ou ENTER para padrão" if padrao else ""
+        escolha = input(f"{AZUL}Selecione uma opção (1-{len(opcoes)}){sufixo}: {RESET}").strip()
+        if not escolha and padrao:
+            return padrao
+        if escolha.isdigit():
+            idx = int(escolha) - 1
+            if 0 <= idx < len(opcoes):
+                return opcoes[idx]
+        print(f"{AZUL}[ERRO]: Opção inválida. Digite um número de 1 a {len(opcoes)}.{RESET}")
+
+def prompt_choice_edit(texto: str, opcoes: list[str], atual: str) -> str | None:
+    """Exibe uma lista de opções para edição, permitindo manter o valor atual."""
+    print(f"\n{AZUL_BRILHANTE}{texto} [Atual: {atual}] (Pressione ENTER para manter){RESET}")
+    for i, op in enumerate(opcoes, 1):
+        print(f"{AZUL}  [{i}] {op}{RESET}")
+    
+    while True:
+        escolha = input(f"{AZUL}Selecione uma opção (1-{len(opcoes)}) ou ENTER para manter: {RESET}").strip()
+        if not escolha:
+            return None
+        if escolha.isdigit():
+            idx = int(escolha) - 1
+            if 0 <= idx < len(opcoes):
+                return opcoes[idx]
+        print(f"{AZUL}[ERRO]: Opção inválida. Digite um número de 1 a {len(opcoes)}.{RESET}")
+
 # ==============================================================================
 
 
@@ -666,11 +701,12 @@ def run_interactive(editor: KnowledgeBaseEditor, *, backup: bool) -> None:
                 print_retro(f"\n{AZUL_BRILHANTE}[SISTEMA]: Iniciando cadastro de fato...{RESET}")
                 fact = editor.add_fact(
                     fact_id=input(f"{AZUL}ID (vazio = automático): {RESET}").strip() or None,
-                    attribute=input(f"{AZUL}Attribute snake_case: {RESET}").strip(),
-                    label=input(f"{AZUL}Rótulo: {RESET}").strip(),
+                    attribute=input(f"{AZUL}Attribute (obrigatório: snake_case, ex: falha_rede): {RESET}").strip(),
+                    label=input(f"{AZUL}Rótulo (descrição legível): {RESET}").strip(),
                     question=input(f"{AZUL}Pergunta (vazio para inferido): {RESET}").strip() or None,
-                    category=input(f"{AZUL}Categoria: {RESET}").strip() or "desempenho_execucao",
-                    source=input(f"{AZUL}Fonte [user_input/inferred]: {RESET}").strip() or "user_input",
+                    fact_type=prompt_choice("Tipo de dado do fato:", sorted(list(FACT_TYPES)), "boolean"),
+                    category=prompt_choice("Categoria do fato:", sorted(list(FACT_CATEGORIES)), "desempenho_execucao"),
+                    source=prompt_choice("Fonte do fato:", sorted(list(FACT_SOURCES)), "user_input"),
                 )
                 editor.save(backup=backup)
                 print_retro(f"{AZUL_BRILHANTE}[SUCESSO]: Fato cadastrado com ID: {fact['id']}{RESET}")
@@ -678,13 +714,26 @@ def run_interactive(editor: KnowledgeBaseEditor, *, backup: bool) -> None:
                 print_retro(f"\n{AZUL_BRILHANTE}[SISTEMA]: Editando fato existente...{RESET}")
                 fact_id = input(f"{AZUL}ID do fato: {RESET}").strip()
                 fact = editor.get_fact(fact_id)
+                
+                attribute = input(f"{AZUL}Attribute (obrigatório: snake_case) [{fact['attribute']}]: {RESET}").strip() or None
+                label = input(f"{AZUL}Rótulo [{fact['label']}]: {RESET}").strip() or None
+                question = input(f"{AZUL}Pergunta [{fact.get('question')}]: {RESET}").strip() or None
+                
+                fact_type = prompt_choice_edit("Novo Tipo", sorted(list(FACT_TYPES)), fact['type'])
+                category = prompt_choice_edit("Nova Categoria", sorted(list(FACT_CATEGORIES)), fact['category'])
+                source = prompt_choice_edit("Nova Fonte", sorted(list(FACT_SOURCES)), fact['source'])
+
                 updates = {
-                    "attribute": input(f"{AZUL}Attribute [{fact['attribute']}]: {RESET}").strip() or None,
-                    "label": input(f"{AZUL}Rótulo [{fact['label']}]: {RESET}").strip() or None,
-                    "question": input(f"{AZUL}Pergunta [{fact.get('question')}]: {RESET}").strip() or None,
-                    "category": input(f"{AZUL}Categoria [{fact['category']}]: {RESET}").strip() or None,
-                    "source": input(f"{AZUL}Fonte [{fact['source']}]: {RESET}").strip() or None,
+                    "attribute": attribute,
+                    "label": label,
+                    "question": question,
+                    "type": fact_type,
+                    "category": category,
+                    "source": source,
                 }
+                # Remove chaves None para não sobrescrever
+                updates = {k: v for k, v in updates.items() if v is not None}
+                
                 editor.edit_fact(fact_id, **updates)
                 editor.save(backup=backup)
                 print_retro(f"{AZUL_BRILHANTE}[SUCESSO]: Fato {fact_id} editado.{RESET}")
@@ -701,9 +750,9 @@ def run_interactive(editor: KnowledgeBaseEditor, *, backup: bool) -> None:
             elif action == "add_rule":
                 print_retro(f"\n{AZUL_BRILHANTE}[SISTEMA]: Iniciando cadastro de regra...{RESET}")
                 rule = editor.add_rule_from_text(
-                    input(f"{AZUL}Regra (SE F01 E F02 ENTÃO H1=true): {RESET}").strip(),
+                    input(f"{AZUL}Regra (formato obrigatório: SE F01 E F02 ENTÃO H1=true): {RESET}").strip(),
                     label=input(f"{AZUL}Rótulo: {RESET}").strip() or None,
-                    priority=int(input(f"{AZUL}Prioridade [1-5]: {RESET}").strip() or "1"),
+                    priority=int(prompt_choice("Prioridade da Regra:", ["1", "2", "3", "4", "5"], "1")),
                     explanation_why=input(f"{AZUL}Explicação Por que?: {RESET}").strip(),
                     explanation_how=input(f"{AZUL}Explicação Como?: {RESET}").strip(),
                 )
@@ -717,13 +766,20 @@ def run_interactive(editor: KnowledgeBaseEditor, *, backup: bool) -> None:
                 current_target = rule["conclusion"].get("fact_id") or rule["conclusion"].get(
                     "hypothesis_id"
                 )
+                
+                priority_str = prompt_choice_edit("Nova Prioridade", ["1", "2", "3", "4", "5"], str(rule['priority']))
+
                 updates = {
                     "conditions": _csv(conditions),
                     "conclusion_id": input(f"{AZUL}Conclusão [{current_target}]: {RESET}").strip() or None,
                     "label": input(f"{AZUL}Rótulo [{rule['label']}]: {RESET}").strip() or None,
+                    "priority": int(priority_str) if priority_str else None,
                     "explanation_why": input(f"{AZUL}Explicação Por que? [manter]: {RESET}").strip() or None,
                     "explanation_how": input(f"{AZUL}Explicação Como? [manter]: {RESET}").strip() or None,
                 }
+                
+                updates = {k: v for k, v in updates.items() if v is not None}
+                
                 editor.edit_rule(rule_id, **updates)
                 editor.save(backup=backup)
                 print_retro(f"{AZUL_BRILHANTE}[SUCESSO]: Regra {rule_id} editada.{RESET}")
