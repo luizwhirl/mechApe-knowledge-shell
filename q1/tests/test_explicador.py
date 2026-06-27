@@ -1,12 +1,9 @@
 """
 Testes do Mecanismo de Explicação - Módulo 4 (P3)
 
-Localização esperada: q1/test_explicador.py
+Localização esperada: q1/tests/test_explicador.py
 Executar a partir da raiz do projeto:
-    python -m unittest q1.test_explicador
-
-Ou diretamente de dentro de q1/:
-    python -m unittest test_explicador
+    python -m unittest q1.tests.test_explicador
 
 Cobre:
   - por_que(): fato perguntado durante o backward chaining
@@ -24,14 +21,15 @@ import unittest
 from pathlib import Path
 
 # Garante que 'q1' seja encontrado independentemente de onde o teste é chamado.
-# parents[1] = raiz do projeto (sobe de q1/ para /)
-ROOT = Path(__file__).resolve().parents[1]
+# parents[2] = raiz do projeto (sobe de q1/tests/ para q1/ e depois para /)
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
 from q1.explicador import ExplicadorInferencia
 from q1.motor_inferencia import MotorInferencia
 
-KB = Path(__file__).resolve().parent / "tests" / "knowledge_base.json"
+# Como o teste agora está dentro de 'tests', a base JSON está na mesma pasta
+KB = Path(__file__).resolve().parent / "knowledge_base.json"
 
 
 def _motor_com_fatos(fatos: list[str]) -> tuple[MotorInferencia, ExplicadorInferencia]:
