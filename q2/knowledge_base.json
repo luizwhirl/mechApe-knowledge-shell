@@ -1,0 +1,624 @@
+{
+  "_meta": {
+    "schema_version": "2.0.0",
+    "domain": "Personagens Fictícios — Filmes, Séries, Cartoons e Animes",
+    "description": "Base de conhecimento para o sistema Akinator do MechApe. 35 personagens fictícios com 23 atributos cada.",
+    "created_at": "2026-06-27",
+    "encoding": "UTF-8",
+    "stats": {
+      "total_personagens": 35,
+      "total_atributos": 23
+    }
+  },
+
+  "attributes": [
+    {
+      "id": "A01",
+      "attribute": "eh_humano",
+      "question": "O personagem é humano (biologicamente)?"
+    },
+    {
+      "id": "A02",
+      "attribute": "eh_heroi",
+      "question": "O personagem é herói ou protagonista aliado ao bem?"
+    },
+    {
+      "id": "A03",
+      "attribute": "tem_superpoderes",
+      "question": "O personagem possui habilidades físicas ou mágicas além de um humano normal?"
+    },
+    {
+      "id": "A04",
+      "attribute": "eh_animado",
+      "question": "O personagem é de uma animação (cartoon ocidental ou anime)?"
+    },
+    {
+      "id": "A05",
+      "attribute": "eh_anime",
+      "question": "O personagem é de um anime japonês especificamente?"
+    },
+    {
+      "id": "A06",
+      "attribute": "tem_aparencia_adulta",
+      "question": "O personagem aparenta ter mais de 18 anos de idade?"
+    },
+    {
+      "id": "A07",
+      "attribute": "usa_arma_fisica",
+      "question": "O personagem usa armas físicas (espada, pistola, faca, etc.) com regularidade?"
+    },
+    {
+      "id": "A08",
+      "attribute": "usa_magia_ou_poderes_misticos",
+      "question": "O personagem usa magia, feitiços ou energias místicas?"
+    },
+    {
+      "id": "A09",
+      "attribute": "eh_masculino",
+      "question": "O personagem é do gênero masculino?"
+    },
+    {
+      "id": "A10",
+      "attribute": "tem_visual_iconico",
+      "question": "O personagem tem um traje, acessório ou visual absolutamente icônico e reconhecível?"
+    },
+    {
+      "id": "A11",
+      "attribute": "eh_comico",
+      "question": "O personagem é predominantemente cômico ou serve de alívio cômico?"
+    },
+    {
+      "id": "A12",
+      "attribute": "eh_genio",
+      "question": "O personagem é caracterizado principalmente pela inteligência ou estratégia?"
+    },
+    {
+      "id": "A13",
+      "attribute": "vive_mundo_real_moderno",
+      "question": "O cenário da obra é o mundo real contemporâneo (sem magia ou ficção científica)?"
+    },
+    {
+      "id": "A14",
+      "attribute": "vive_mundo_fantasia",
+      "question": "O personagem vive em um mundo de fantasia ou cenário medieval/mágico?"
+    },
+    {
+      "id": "A15",
+      "attribute": "vive_universo_ficcao_cientifica",
+      "question": "O personagem vive em um universo de ficção científica ou futurista?"
+    },
+    {
+      "id": "A16",
+      "attribute": "tem_aparencia_muito_incomum",
+      "question": "O personagem tem cabelo, maquiagem ou aparência física muito incomum ou exagerada?"
+    },
+    {
+      "id": "A17",
+      "attribute": "eh_vilao_ou_antagonista",
+      "question": "O personagem é o vilão principal ou um antagonista da obra?"
+    },
+    {
+      "id": "A18",
+      "attribute": "eh_solitario_ou_taciturno",
+      "question": "O personagem costuma agir sozinho, é sério, sombrio ou de poucas palavras?"
+    },
+    {
+      "id": "A19",
+      "attribute": "eh_jovem_ou_crianca",
+      "question": "O personagem é criança, adolescente ou aparenta ter menos de 18 anos?"
+    },
+    {
+      "id": "A20",
+      "attribute": "tem_fraqueza_marcante",
+      "question": "O personagem possui uma fraqueza ou limitação narrativa muito marcante?"
+    },
+    {
+      "id": "A21",
+      "attribute": "tem_dupla_identidade_secreta",
+      "question": "O personagem tem uma identidade secreta ou alter ego amplamente conhecido?"
+    },
+    {
+      "id": "A22",
+      "attribute": "usa_tecnologia_avancada_como_recurso",
+      "question": "O personagem usa tecnologia avançada como sua principal ferramenta ou arma?"
+    },
+    {
+      "id": "A23",
+      "attribute": "sofreu_alteracao_nao_natural",
+      "question": "O personagem sofreu uma transformação, experimento ou alteração corporal não-natural?"
+    }
+  ],
+
+  "characters": [
+    {
+      "id": "C01",
+      "name": "Darth Vader",
+      "origin": "Star Wars",
+      "type": "filme",
+      "description": "Lorde Sith mascarado do Império Galáctico",
+      "attributes": {
+        "A01": true,  "A02": false, "A03": true,  "A04": false, "A05": false,
+        "A06": true,  "A07": true,  "A08": true,  "A09": true,  "A10": true,
+        "A11": false, "A12": true,  "A13": false, "A14": false, "A15": true,
+        "A16": false, "A17": true,  "A18": true,  "A19": false, "A20": true,
+        "A21": false, "A22": false, "A23": true
+      }
+    },
+    {
+      "id": "C02",
+      "name": "Hermione Granger",
+      "origin": "Harry Potter",
+      "type": "filme",
+      "description": "Bruxinha mais inteligente de Hogwarts",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": false, "A05": false,
+        "A06": false, "A07": false, "A08": true,  "A09": false, "A10": false,
+        "A11": false, "A12": true,  "A13": false, "A14": true,  "A15": false,
+        "A16": false, "A17": false, "A18": false, "A19": true,  "A20": false,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C03",
+      "name": "Tony Stark",
+      "origin": "Marvel Cinematic Universe",
+      "type": "filme",
+      "description": "Gênio bilionário playboy filantropo com armadura de ferro",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": false, "A05": false,
+        "A06": true,  "A07": true,  "A08": false, "A09": true,  "A10": true,
+        "A11": false, "A12": true,  "A13": true,  "A14": false, "A15": true,
+        "A16": false, "A17": false, "A18": false, "A19": false, "A20": true,
+        "A21": false, "A22": true,  "A23": false
+      }
+    },
+    {
+      "id": "C04",
+      "name": "Jack Sparrow",
+      "origin": "Piratas do Caribe",
+      "type": "filme",
+      "description": "Capitão pirata excêntrico e astuto do Black Pearl",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": false, "A04": false, "A05": false,
+        "A06": true,  "A07": true,  "A08": false, "A09": true,  "A10": true,
+        "A11": true,  "A12": false, "A13": false, "A14": true,  "A15": false,
+        "A16": true,  "A17": false, "A18": false, "A19": false, "A20": true,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C05",
+      "name": "Frodo Baggins",
+      "origin": "O Senhor dos Anéis",
+      "type": "filme",
+      "description": "Hobbit portador do Um Anel destinado a destruí-lo",
+      "attributes": {
+        "A01": false, "A02": true,  "A03": false, "A04": false, "A05": false,
+        "A06": false, "A07": true,  "A08": false, "A09": true,  "A10": false,
+        "A11": false, "A12": false, "A13": false, "A14": true,  "A15": false,
+        "A16": false, "A17": false, "A18": true,  "A19": true,  "A20": true,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C06",
+      "name": "Coringa",
+      "origin": "DC — Batman",
+      "type": "filme",
+      "description": "Agente do caos e arquiinimigo do Batman",
+      "attributes": {
+        "A01": true,  "A02": false, "A03": false, "A04": false, "A05": false,
+        "A06": true,  "A07": true,  "A08": false, "A09": true,  "A10": true,
+        "A11": true,  "A12": true,  "A13": true,  "A14": false, "A15": false,
+        "A16": true,  "A17": true,  "A18": false, "A19": false, "A20": false,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C07",
+      "name": "Walter White",
+      "origin": "Breaking Bad",
+      "type": "série",
+      "description": "Professor de química que se torna um poderoso traficante",
+      "attributes": {
+        "A01": true,  "A02": false, "A03": false, "A04": false, "A05": false,
+        "A06": true,  "A07": true,  "A08": false, "A09": true,  "A10": true,
+        "A11": false, "A12": true,  "A13": true,  "A14": false, "A15": false,
+        "A16": false, "A17": true,  "A18": true,  "A19": false, "A20": true,
+        "A21": true,  "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C08",
+      "name": "Jon Snow",
+      "origin": "Game of Thrones",
+      "type": "série",
+      "description": "Bastardo dos Starks que liderou a Patrulha da Noite",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": false, "A04": false, "A05": false,
+        "A06": true,  "A07": true,  "A08": false, "A09": true,  "A10": true,
+        "A11": false, "A12": false, "A13": false, "A14": true,  "A15": false,
+        "A16": false, "A17": false, "A18": true,  "A19": false, "A20": true,
+        "A21": false, "A22": false, "A23": true
+      }
+    },
+    {
+      "id": "C09",
+      "name": "Din Djarin (Mandalorian)",
+      "origin": "The Mandalorian",
+      "type": "série",
+      "description": "Caçador de recompensas mandaloriano protetor de Grogu",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": false, "A04": false, "A05": false,
+        "A06": true,  "A07": true,  "A08": false, "A09": true,  "A10": true,
+        "A11": false, "A12": false, "A13": false, "A14": false, "A15": true,
+        "A16": false, "A17": false, "A18": true,  "A19": false, "A20": false,
+        "A21": false, "A22": true,  "A23": false
+      }
+    },
+    {
+      "id": "C10",
+      "name": "Eleven",
+      "origin": "Stranger Things",
+      "type": "série",
+      "description": "Menina com poderes de telecinese fugida do laboratório",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": false, "A05": false,
+        "A06": false, "A07": false, "A08": true,  "A09": false, "A10": false,
+        "A11": false, "A12": false, "A13": true,  "A14": false, "A15": false,
+        "A16": false, "A17": false, "A18": true,  "A19": true,  "A20": true,
+        "A21": false, "A22": false, "A23": true
+      }
+    },
+    {
+      "id": "C11",
+      "name": "Batman",
+      "origin": "DC — Batman: The Animated Series",
+      "type": "cartoon",
+      "description": "Vigilante mascarado de Gotham sem superpoderes",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": false, "A04": true,  "A05": false,
+        "A06": true,  "A07": true,  "A08": false, "A09": true,  "A10": true,
+        "A11": false, "A12": true,  "A13": true,  "A14": false, "A15": false,
+        "A16": false, "A17": false, "A18": true,  "A19": false, "A20": true,
+        "A21": true,  "A22": true,  "A23": false
+      }
+    },
+    {
+      "id": "C12",
+      "name": "Bob Esponja",
+      "origin": "Bob Esponja Calças Quadradas",
+      "type": "cartoon",
+      "description": "Esponja marinha entusiasta que trabalha na Lanchonete Siri Cascudo",
+      "attributes": {
+        "A01": false, "A02": true,  "A03": false, "A04": true,  "A05": false,
+        "A06": false, "A07": false, "A08": false, "A09": true,  "A10": true,
+        "A11": true,  "A12": false, "A13": false, "A14": false, "A15": false,
+        "A16": true,  "A17": false, "A18": false, "A19": true,  "A20": false,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C13",
+      "name": "Homer Simpson",
+      "origin": "Os Simpsons",
+      "type": "cartoon",
+      "description": "Pai de família trabalhador de usina nuclear eternamente faminto",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": false, "A04": true,  "A05": false,
+        "A06": true,  "A07": false, "A08": false, "A09": true,  "A10": true,
+        "A11": true,  "A12": false, "A13": true,  "A14": false, "A15": false,
+        "A16": false, "A17": false, "A18": false, "A19": false, "A20": false,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C14",
+      "name": "Shrek",
+      "origin": "Shrek",
+      "type": "cartoon",
+      "description": "Ogro solitário dono de um pântano em Terra do Muito Longe",
+      "attributes": {
+        "A01": false, "A02": true,  "A03": false, "A04": true,  "A05": false,
+        "A06": true,  "A07": false, "A08": false, "A09": true,  "A10": false,
+        "A11": true,  "A12": false, "A13": false, "A14": true,  "A15": false,
+        "A16": false, "A17": false, "A18": true,  "A19": false, "A20": false,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C15",
+      "name": "Buzz Lightyear",
+      "origin": "Toy Story",
+      "type": "cartoon",
+      "description": "Brinquedo guarda-espacial convicto de ser um herói galáctico de verdade",
+      "attributes": {
+        "A01": false, "A02": true,  "A03": false, "A04": true,  "A05": false,
+        "A06": true,  "A07": false, "A08": false, "A09": true,  "A10": true,
+        "A11": false, "A12": false, "A13": true,  "A14": false, "A15": false,
+        "A16": false, "A17": false, "A18": true,  "A19": false, "A20": true,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C16",
+      "name": "Naruto Uzumaki",
+      "origin": "Naruto",
+      "type": "anime",
+      "description": "Ninja da Aldeia da Folha portador da Raposa de Nove Caudas",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": true,  "A05": true,
+        "A06": false, "A07": true,  "A08": true,  "A09": true,  "A10": true,
+        "A11": false, "A12": false, "A13": false, "A14": true,  "A15": false,
+        "A16": true,  "A17": false, "A18": false, "A19": true,  "A20": false,
+        "A21": false, "A22": false, "A23": true
+      }
+    },
+    {
+      "id": "C17",
+      "name": "Son Goku",
+      "origin": "Dragon Ball Z",
+      "type": "anime",
+      "description": "Guerreiro Saiyajin protetor da Terra e Super Saiyajin lendário",
+      "attributes": {
+        "A01": false, "A02": true,  "A03": true,  "A04": true,  "A05": true,
+        "A06": true,  "A07": false, "A08": false, "A09": true,  "A10": true,
+        "A11": false, "A12": false, "A13": false, "A14": true,  "A15": false,
+        "A16": true,  "A17": false, "A18": false, "A19": false, "A20": false,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C18",
+      "name": "Monkey D. Luffy",
+      "origin": "One Piece",
+      "type": "anime",
+      "description": "Pirata de borracha determinado a se tornar o Rei dos Piratas",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": true,  "A05": true,
+        "A06": false, "A07": false, "A08": false, "A09": true,  "A10": true,
+        "A11": true,  "A12": false, "A13": false, "A14": true,  "A15": false,
+        "A16": false, "A17": false, "A18": false, "A19": true,  "A20": true,
+        "A21": false, "A22": false, "A23": true
+      }
+    },
+    {
+      "id": "C19",
+      "name": "Levi Ackerman",
+      "origin": "Attack on Titan",
+      "type": "anime",
+      "description": "O soldado mais forte da humanidade no Esquadrão de Reconhecimento",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": true,  "A05": true,
+        "A06": true,  "A07": true,  "A08": false, "A09": true,  "A10": true,
+        "A11": false, "A12": false, "A13": false, "A14": true,  "A15": false,
+        "A16": false, "A17": false, "A18": true,  "A19": false, "A20": false,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C20",
+      "name": "Light Yagami",
+      "origin": "Death Note",
+      "type": "anime",
+      "description": "Estudante gênio que usa o Death Note para se tornar um deus da justiça",
+      "attributes": {
+        "A01": true,  "A02": false, "A03": false, "A04": true,  "A05": true,
+        "A06": true,  "A07": false, "A08": false, "A09": true,  "A10": false,
+        "A11": false, "A12": true,  "A13": true,  "A14": false, "A15": false,
+        "A16": false, "A17": true,  "A18": true,  "A19": false, "A20": true,
+        "A21": true,  "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C21",
+      "name": "Sailor Moon",
+      "origin": "Sailor Moon",
+      "type": "anime",
+      "description": "Guerreira lunar Usagi Tsukino defensora do amor e da justiça",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": true,  "A05": true,
+        "A06": false, "A07": false, "A08": true,  "A09": false, "A10": true,
+        "A11": true,  "A12": false, "A13": true,  "A14": false, "A15": false,
+        "A16": true,  "A17": false, "A18": false, "A19": true,  "A20": false,
+        "A21": true,  "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C22",
+      "name": "Edward Elric",
+      "origin": "Fullmetal Alchemist: Brotherhood",
+      "type": "anime",
+      "description": "Alquimista de Estado prodígio em busca da Pedra Filosofal",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": true,  "A05": true,
+        "A06": false, "A07": true,  "A08": true,  "A09": true,  "A10": true,
+        "A11": false, "A12": true,  "A13": false, "A14": true,  "A15": false,
+        "A16": true,  "A17": false, "A18": true,  "A19": true,  "A20": true,
+        "A21": false, "A22": false, "A23": true
+      }
+    },
+    {
+      "id": "C23",
+      "name": "Nezuko Kamado",
+      "origin": "Demon Slayer",
+      "type": "anime",
+      "description": "Irmã do Tanjiro transformada em demônio que protege humanos",
+      "attributes": {
+        "A01": false, "A02": true,  "A03": true,  "A04": true,  "A05": true,
+        "A06": false, "A07": true,  "A08": true,  "A09": false, "A10": true,
+        "A11": false, "A12": false, "A13": false, "A14": true,  "A15": false,
+        "A16": true,  "A17": false, "A18": true,  "A19": true,  "A20": true,
+        "A21": false, "A22": false, "A23": true
+      }
+    },
+    {
+      "id": "C24",
+      "name": "Spike Spiegel",
+      "origin": "Cowboy Bebop",
+      "type": "anime",
+      "description": "Caçador de recompensas espacial com passado obscuro na máfia",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": false, "A04": true,  "A05": true,
+        "A06": true,  "A07": true,  "A08": false, "A09": true,  "A10": true,
+        "A11": false, "A12": false, "A13": false, "A14": false, "A15": true,
+        "A16": false, "A17": false, "A18": true,  "A19": false, "A20": true,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C25",
+      "name": "Saitama",
+      "origin": "One Punch Man",
+      "type": "anime",
+      "description": "Herói que derrota qualquer inimigo com um único soco, vivendo uma crise existencial",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": true,  "A05": true,
+        "A06": true,  "A07": false, "A08": false, "A09": true,  "A10": true,
+        "A11": true,  "A12": false, "A13": false, "A14": false, "A15": true,
+        "A16": false, "A17": false, "A18": false, "A19": false, "A20": false,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C26",
+      "name": "Thanos",
+      "origin": "Marvel Cinematic Universe",
+      "type": "filme",
+      "description": "Titã violeta com a Manopla do Infinito que busca o equilíbrio do universo",
+      "attributes": {
+        "A01": false, "A02": false, "A03": true,  "A04": false, "A05": false,
+        "A06": true,  "A07": false, "A08": true,  "A09": true,  "A10": true,
+        "A11": false, "A12": true,  "A13": false, "A14": false, "A15": true,
+        "A16": true,  "A17": true,  "A18": true,  "A19": false, "A20": false,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C27",
+      "name": "Peter Parker (Spider-Man)",
+      "origin": "Marvel Cinematic Universe",
+      "type": "filme",
+      "description": "Adolescente picado por uma aranha radioativa que se torna o Homem-Aranha",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": false, "A05": false,
+        "A06": false, "A07": false, "A08": false, "A09": true,  "A10": true,
+        "A11": false, "A12": true,  "A13": true,  "A14": false, "A15": false,
+        "A16": false, "A17": false, "A18": false, "A19": true,  "A20": true,
+        "A21": true,  "A22": true,  "A23": true
+      }
+    },
+    {
+      "id": "C28",
+      "name": "Gandalf",
+      "origin": "O Senhor dos Anéis",
+      "type": "filme",
+      "description": "Mago ancião que guia a Sociedade do Anel contra Sauron",
+      "attributes": {
+        "A01": false, "A02": true,  "A03": true,  "A04": false, "A05": false,
+        "A06": true,  "A07": true,  "A08": true,  "A09": true,  "A10": true,
+        "A11": false, "A12": true,  "A13": false, "A14": true,  "A15": false,
+        "A16": false, "A17": false, "A18": true,  "A19": false, "A20": false,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C29",
+      "name": "Elsa",
+      "origin": "Frozen",
+      "type": "cartoon",
+      "description": "Rainha de Arendelle com poderes mágicos de gelo e neve",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": true,  "A05": false,
+        "A06": true,  "A07": false, "A08": true,  "A09": false, "A10": true,
+        "A11": false, "A12": false, "A13": false, "A14": true,  "A15": false,
+        "A16": true,  "A17": false, "A18": true,  "A19": false, "A20": true,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C30",
+      "name": "Geralt de Rívia",
+      "origin": "The Witcher",
+      "type": "série",
+      "description": "Bruxeiro mutante caçador de monstros com cabelo branco e duas espadas",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": false, "A05": false,
+        "A06": true,  "A07": true,  "A08": true,  "A09": true,  "A10": true,
+        "A11": false, "A12": false, "A13": false, "A14": true,  "A15": false,
+        "A16": true,  "A17": false, "A18": true,  "A19": false, "A20": true,
+        "A21": false, "A22": false, "A23": true
+      }
+    },
+    {
+      "id": "C31",
+      "name": "Tyrion Lannister",
+      "origin": "Game of Thrones",
+      "type": "série",
+      "description": "O Anão da Família Lannister, conselheiro inteligente e irônico",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": false, "A04": false, "A05": false,
+        "A06": true,  "A07": false, "A08": false, "A09": true,  "A10": false,
+        "A11": true,  "A12": true,  "A13": false, "A14": true,  "A15": false,
+        "A16": false, "A17": false, "A18": false, "A19": false, "A20": true,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C32",
+      "name": "Mestre Yoda",
+      "origin": "Star Wars",
+      "type": "filme",
+      "description": "Grão-Mestre Jedi de 900 anos e guardião da Ordem Jedi",
+      "attributes": {
+        "A01": false, "A02": true,  "A03": true,  "A04": false, "A05": false,
+        "A06": true,  "A07": true,  "A08": true,  "A09": true,  "A10": true,
+        "A11": false, "A12": true,  "A13": false, "A14": false, "A15": true,
+        "A16": true,  "A17": false, "A18": true,  "A19": false, "A20": false,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C33",
+      "name": "L Lawliet",
+      "origin": "Death Note",
+      "type": "anime",
+      "description": "O maior detetive do mundo que enfrenta Kira com apenas sua mente",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": false, "A04": true,  "A05": true,
+        "A06": true,  "A07": false, "A08": false, "A09": true,  "A10": true,
+        "A11": false, "A12": true,  "A13": true,  "A14": false, "A15": false,
+        "A16": false, "A17": false, "A18": true,  "A19": false, "A20": false,
+        "A21": true,  "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C34",
+      "name": "Kakashi Hatake",
+      "origin": "Naruto",
+      "type": "anime",
+      "description": "O Ninja Copiador, líder do Time 7 e mestre de Naruto",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": true,  "A05": true,
+        "A06": true,  "A07": true,  "A08": true,  "A09": true,  "A10": true,
+        "A11": false, "A12": true,  "A13": false, "A14": true,  "A15": false,
+        "A16": false, "A17": false, "A18": true,  "A19": false, "A20": false,
+        "A21": false, "A22": false, "A23": false
+      }
+    },
+    {
+      "id": "C35",
+      "name": "Mikasa Ackerman",
+      "origin": "Attack on Titan",
+      "type": "anime",
+      "description": "Soldado prodigiosa do Esquadrão de Reconhecimento e protetora de Eren",
+      "attributes": {
+        "A01": true,  "A02": true,  "A03": true,  "A04": true,  "A05": true,
+        "A06": true,  "A07": true,  "A08": false, "A09": false, "A10": true,
+        "A11": false, "A12": false, "A13": false, "A14": true,  "A15": false,
+        "A16": false, "A17": false, "A18": true,  "A19": false, "A20": true,
+        "A21": false, "A22": false, "A23": false
+      }
+    }
+  ]
+}
