@@ -12,11 +12,10 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from q1.editor import KnowledgeBaseError, validate_references
+from q1.editor_base_conhecimento import EditorError, KnowledgeBaseEditor
 
 try:
     import jsonschema
@@ -69,9 +68,10 @@ def main() -> int:
 
     print("  Verificando integridade referencial das regras...")
     try:
-        validate_references(kb)
+        editor = KnowledgeBaseEditor(BASE_DIR / "knowledge_base.json")
+        editor.validate_integrity()
         print("  OK Todas as referencias de fatos e hipoteses sao validas.")
-    except KnowledgeBaseError as exc:
+    except EditorError as exc:
         print(f"  ERRO {exc}")
         return 1
 

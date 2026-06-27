@@ -9,7 +9,7 @@ Não modifica o motor de inferência. Lê o estado da sessão e a base de
 conhecimento após a inferência ter rodado para reconstruir as explicações.
 
 Uso:
-    from motor_inferencia import MotorInferencia
+    from q1.motor_inferencia import MotorInferencia
     from q1.explicador import ExplicadorInferencia
 
     motor = MotorInferencia("q1/tests/knowledge_base.json")
@@ -259,42 +259,6 @@ class ExplicadorInferencia:
 
         return "\n".join(linhas)
     
-    def obter_arvore_causal(self, objetivo_id: str, visitados=None) -> list[str]:
-        """
-        Rastreia recursivamente o encadeamento de regras que ativaram as premissas 
-        necessárias para alcançar o objetivo_id (fato intermediário ou hipótese).
-        """
-        if visitados is None:
-            visitados = set()
-            
-        linhas_explicacao = []
-        
-        # Encontra todas as regras disparadas que concluem este objetivo
-        regras_causais = []
-        for regra_id in self._motor.sessao.get("rules_fired", set()):
-            regra = self._regra(regra_id)
-            if regra:
-                conclusao = regra["conclusion"]
-                if conclusao.get("hypothesis_id") == objetivo_id or conclusao.get("fact_id") == objetivo_id:
-                    regras_causais.append(regra)
-                    
-        for regra in regras_causais:
-            if regra["id"] in visitados:
-                continue
-            visitados.add(regra["id"])
-            
-            # 1. Primeiro, investiga recursivamente as condições desta regra que são fatos inferidos
-            for condicao_id in regra["conditions"]:
-                fato_condicao = self._fato(condicao_id)
-                if fato_condicao and fato_condicao.get("source") == "inferred":
-                    # Se a condição veio de outra regra, descobre qual foi antes de explicar a atual
-                    linhas_explicacao.extend(self.obter_arvore_causal(condicao_id, visitados))
-                    
-            # 2. Depois, adiciona a explicação da regra atual
-            linhas_explicacao.append(f"  -> [{regra['id']}]: {regra['explanation_how']}")
-            
-        return linhas_explicacao
-
     def como_encadeado(self, hipotese_id: str) -> str:
         """
         Nova versão do método 'Como?' exibindo o encadeamento lógico completo.

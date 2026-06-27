@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from motor_inferencia import MotorInferencia
+from q1.motor_inferencia import MotorInferencia
 from q1.explicador import ExplicadorInferencia
 
 # Importando o novo editor azul (Terminal de Desenvolvimento)
