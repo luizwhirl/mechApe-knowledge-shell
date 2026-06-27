@@ -1,0 +1,737 @@
+{
+  "_meta": {
+    "schema_version": "1.0.0",
+    "domain": "Diagnóstico de Erros e Performance em Jogos de PC",
+    "description": "Base de conhecimento para o sistema especialista MechApe Shell. Contém fatos, regras, hipóteses e metadados de rastreamento para o mecanismo de explicação.",
+    "created_at": "2026-06-23",
+    "encoding": "UTF-8"
+  },
+
+  "facts": {
+    "_comment": "Todos os fatos possíveis do domínio. Cada fato tem um ID único, uma pergunta para o usuário, e metadados para o motor de inferência e o mecanismo de explicação.",
+    "items": [
+      {
+        "id": "F01",
+        "attribute": "crash_para_desktop",
+        "label": "O jogo fecha sozinho para a área de trabalho (Crash)",
+        "question": "O jogo fecha sozinho e volta para a área de trabalho sem aviso?",
+        "type": "boolean",
+        "category": "desempenho_execucao",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F02",
+        "attribute": "queda_brusca_fps",
+        "label": "Ocorre queda brusca de FPS (Stuttering) durante o jogo",
+        "question": "Você percebe quedas bruscas de frames por segundo (travadas) durante o jogo?",
+        "type": "boolean",
+        "category": "desempenho_execucao",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F03",
+        "attribute": "artefatos_visuais",
+        "label": "O jogo apresenta artefatos visuais na tela (cores estranhas, polígonos esticados)",
+        "question": "Aparecem cores estranhas, polígonos distorcidos ou outros defeitos visuais na tela?",
+        "type": "boolean",
+        "category": "desempenho_execucao",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F04",
+        "attribute": "jogo_segundo_plano_sem_imagem",
+        "label": "O jogo abre em segundo plano, mas não exibe imagem",
+        "question": "O jogo aparece como processo ativo no sistema, mas a tela fica preta ou não exibe nada?",
+        "type": "boolean",
+        "category": "desempenho_execucao",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F05",
+        "attribute": "loading_longo",
+        "label": "Os tempos de carregamento (Loading) estão excessivamente longos",
+        "question": "As telas de carregamento demoram muito mais do que o esperado?",
+        "type": "boolean",
+        "category": "desempenho_execucao",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F06",
+        "attribute": "erro_ao_abrir",
+        "label": "O erro ocorre imediatamente ao tentar abrir o jogo",
+        "question": "O erro acontece imediatamente quando você tenta abrir o jogo, antes de entrar no menu?",
+        "type": "boolean",
+        "category": "desempenho_execucao",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F07",
+        "attribute": "erro_apos_horas",
+        "label": "O erro ocorre apenas após algumas horas de gameplay",
+        "question": "O problema só aparece depois de jogar por um tempo prolongado (1 hora ou mais)?",
+        "type": "boolean",
+        "category": "desempenho_execucao",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F08",
+        "attribute": "audio_com_falha",
+        "label": "O áudio do jogo apresenta estalos, atrasos ou falhas",
+        "question": "O som do jogo apresenta estalos, cortes ou atrasos durante a execução?",
+        "type": "boolean",
+        "category": "desempenho_execucao",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F09",
+        "attribute": "tela_congela_som_continua",
+        "label": "A tela congela, mas o som do jogo continua rodando",
+        "question": "A imagem do jogo trava completamente, mas o áudio continua sendo reproduzido normalmente?",
+        "type": "boolean",
+        "category": "desempenho_execucao",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F10",
+        "attribute": "erro_launcher_steam",
+        "label": "O erro ocorre ao tentar iniciar pelo launcher da Steam",
+        "question": "O problema aparece ao clicar em 'Jogar' dentro da Steam, antes mesmo do jogo carregar?",
+        "type": "boolean",
+        "category": "launchers",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F11",
+        "attribute": "conta_rockstar_vinculada",
+        "label": "A conta da Rockstar Games foi vinculada à Steam",
+        "question": "Você vinculou sua conta da Rockstar Games / Social Club à sua conta Steam?",
+        "type": "boolean",
+        "category": "launchers",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F12",
+        "attribute": "erro_social_club",
+        "label": "Ocorre falha de 'Social Club failed to initialize'",
+        "question": "Aparece uma mensagem de erro dizendo 'Social Club failed to initialize' ou similar?",
+        "type": "boolean",
+        "category": "launchers",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F13",
+        "attribute": "erro_autenticacao_terceiros",
+        "label": "Ocorre erro de autenticação de conta de terceiros",
+        "question": "Aparece alguma mensagem de erro relacionada à autenticação de conta (login falhou, sessão expirada)?",
+        "type": "boolean",
+        "category": "launchers",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F14",
+        "attribute": "sync_nuvem_falhou",
+        "label": "A sincronização de arquivos na nuvem da Steam falhou",
+        "question": "Você recebeu uma notificação de falha na sincronização de saves na nuvem da Steam?",
+        "type": "boolean",
+        "category": "launchers",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F15",
+        "attribute": "cliente_desatualizado",
+        "label": "O cliente do jogo não foi atualizado recentemente",
+        "question": "O jogo não recebe atualizações há algum tempo (mais de 30 dias sem patch)?",
+        "type": "boolean",
+        "category": "launchers",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F16",
+        "attribute": "erro_dll_ausente",
+        "label": "Uma mensagem de 'Arquivo DLL ausente' ou 'Corrompido' é exibida",
+        "question": "Aparece uma mensagem de erro mencionando arquivo .dll ausente, não encontrado ou corrompido?",
+        "type": "boolean",
+        "category": "software_so",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F17",
+        "attribute": "bsod",
+        "label": "Ocorreu uma tela azul (BSOD) durante a execução",
+        "question": "O computador exibiu uma tela azul da morte (BSOD) enquanto o jogo estava rodando?",
+        "type": "boolean",
+        "category": "software_so",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F18",
+        "attribute": "windows_atualizado_recentemente",
+        "label": "O Windows foi atualizado nos últimos 3 dias",
+        "question": "O Windows instalou alguma atualização nos últimos 3 dias?",
+        "type": "boolean",
+        "category": "software_so",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F19",
+        "attribute": "driver_gpu_desatualizado",
+        "label": "O driver de vídeo (GPU) não é atualizado há mais de 6 meses",
+        "question": "Seu driver de placa de vídeo não é atualizado há mais de 6 meses?",
+        "type": "boolean",
+        "category": "software_so",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F20",
+        "attribute": "falha_permissao_admin",
+        "label": "Há uma notificação de falha de 'Permissão de Administrador'",
+        "question": "Aparece alguma mensagem pedindo permissão de administrador ou dizendo que o acesso foi negado?",
+        "type": "boolean",
+        "category": "software_so",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F21",
+        "attribute": "antivirus_bloqueou",
+        "label": "O antivírus ou Windows Defender bloqueou o executável do jogo",
+        "question": "Você recebeu alguma notificação do antivírus ou Windows Defender bloqueando arquivos do jogo?",
+        "type": "boolean",
+        "category": "software_so",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F22",
+        "attribute": "mods_instalados",
+        "label": "Existem modificações não oficiais (Mods) instaladas no diretório do jogo",
+        "question": "Você tem mods (modificações não oficiais) instalados na pasta do jogo?",
+        "type": "boolean",
+        "category": "software_so",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F23",
+        "attribute": "overlay_discord_ativo",
+        "label": "O overlay (sobreposição) do Discord está ativado",
+        "question": "O overlay do Discord (aquele que aparece sobre o jogo) está ativado nas configurações?",
+        "type": "boolean",
+        "category": "overlays",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F24",
+        "attribute": "overlay_steam_ativo",
+        "label": "O overlay da Steam está ativado",
+        "question": "O overlay da Steam (Shift+Tab) está habilitado nas configurações do jogo?",
+        "type": "boolean",
+        "category": "overlays",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F25",
+        "attribute": "overlay_gpu_software_ativo",
+        "label": "O overlay do GeForce Experience / AMD Adrenalin está ativado",
+        "question": "Você tem o overlay do GeForce Experience (Alt+Z) ou AMD Adrenalin ativado?",
+        "type": "boolean",
+        "category": "overlays",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F26",
+        "attribute": "rivatuner_rodando",
+        "label": "O software Rivatuner ou MSI Afterburner está rodando em segundo plano",
+        "question": "O MSI Afterburner ou Rivatuner Statistics Server (RTSS) está aberto em segundo plano?",
+        "type": "boolean",
+        "category": "overlays",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F27",
+        "attribute": "temp_cpu_alta",
+        "label": "A temperatura da CPU atinge mais de 85°C",
+        "question": "Algum programa de monitoramento (HWMonitor, MSI Afterburner) indica que a CPU passa de 85°C?",
+        "type": "boolean",
+        "category": "hardware",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F28",
+        "attribute": "temp_gpu_alta",
+        "label": "A temperatura da GPU atinge mais de 85°C",
+        "question": "A temperatura da sua placa de vídeo ultrapassa 85°C durante o jogo?",
+        "type": "boolean",
+        "category": "hardware",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F29",
+        "attribute": "uso_ram_alto",
+        "label": "O uso da memória RAM chega a mais de 95% durante a execução",
+        "question": "O Gerenciador de Tarefas mostra uso de RAM acima de 95% enquanto o jogo roda?",
+        "type": "boolean",
+        "category": "hardware",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F30",
+        "attribute": "uso_disco_100",
+        "label": "O uso do disco (HD/SSD) fica em 100% constante",
+        "question": "O Gerenciador de Tarefas mostra o uso do disco travado em 100% durante o jogo?",
+        "type": "boolean",
+        "category": "hardware",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F31",
+        "attribute": "jogo_em_hdd_antigo",
+        "label": "O jogo está instalado em um disco rígido mecânico (HDD) antigo",
+        "question": "O jogo está instalado em um HD mecânico (não é um SSD)?",
+        "type": "boolean",
+        "category": "hardware",
+        "value": null,
+        "source": "user_input"
+      },
+      {
+        "id": "F_INF_01",
+        "attribute": "suspeita_falha_integridade",
+        "label": "Suspeita de falha na integridade dos arquivos do jogo",
+        "question": null,
+        "type": "boolean",
+        "category": "inferred",
+        "value": null,
+        "source": "inferred"
+      },
+      {
+        "id": "F_INF_02",
+        "attribute": "suspeita_conflito_overlay",
+        "label": "Suspeita de conflito de overlay",
+        "question": null,
+        "type": "boolean",
+        "category": "inferred",
+        "value": null,
+        "source": "inferred"
+      }
+    ]
+  },
+
+  "hypotheses": {
+    "_comment": "As hipóteses (diagnósticos finais) que o motor tenta provar. Cada uma tem uma descrição, uma recomendação de ação e um campo de confiança (para futuras extensões probabilísticas).",
+    "items": [
+      {
+        "id": "H1",
+        "label": "Conflito de overlay de aplicativos de terceiros",
+        "description": "Dois ou mais programas com sobreposição de tela ativa estão conflitando entre si ou com o jogo.",
+        "recommendation": "Desative os overlays do Discord, Steam, GeForce Experience e feche o MSI Afterburner/Rivatuner. Teste o jogo com todos desabilitados e reative um por vez para identificar o culpado.",
+        "confidence": null
+      },
+      {
+        "id": "H2",
+        "label": "Falha de vínculo ou autenticação entre launchers (Steam/Rockstar)",
+        "description": "O jogo requer autenticação em um launcher secundário (ex: Rockstar Social Club) que não está conseguindo se comunicar corretamente com a Steam.",
+        "recommendation": "Desvincule e revincule sua conta Rockstar à Steam. Tente abrir o Social Club separadamente antes de iniciar o jogo pela Steam. Verifique se o firewall não está bloqueando a comunicação.",
+        "confidence": null
+      },
+      {
+        "id": "H3",
+        "label": "Arquivos de instalação do jogo corrompidos ou ausentes",
+        "description": "Um ou mais arquivos essenciais do jogo estão corrompidos, incompletos ou foram removidos (possivelmente por antivírus ou mods mal instalados).",
+        "recommendation": "Acesse as propriedades do jogo na Steam > Arquivos Locais > Verificar Integridade dos Arquivos do Jogo. Desinstale mods antes de verificar.",
+        "confidence": null
+      },
+      {
+        "id": "H4",
+        "label": "Superaquecimento (Thermal Throttling) causando limitação de hardware",
+        "description": "A CPU ou GPU está atingindo temperaturas críticas, fazendo o sistema reduzir o desempenho automaticamente para se proteger.",
+        "recommendation": "Limpe o cooler e as saídas de ar do computador. Verifique se a pasta térmica da CPU precisa ser trocada. Melhore a ventilação do gabinete. Monitore as temperaturas com HWMonitor durante o jogo.",
+        "confidence": null
+      },
+      {
+        "id": "H5",
+        "label": "Drivers de vídeo desatualizados ou incompatíveis com o sistema atual",
+        "description": "Uma atualização recente do Windows ou do próprio jogo quebrou a compatibilidade com os drivers de vídeo instalados.",
+        "recommendation": "Acesse o site da NVIDIA ou AMD e baixe o driver mais recente para sua GPU. Se o problema começou após uma atualização do Windows, considere reverter o driver para a versão anterior.",
+        "confidence": null
+      },
+      {
+        "id": "H6",
+        "label": "Vazamento de memória (Memory Leak) ou falta de RAM disponível",
+        "description": "O jogo (ou um processo em segundo plano) está consumindo progressivamente mais memória até esgotar a RAM disponível, causando lentidão ou crash.",
+        "recommendation": "Feche todos os programas desnecessários antes de jogar. Verifique no Gerenciador de Tarefas quais processos consomem mais memória. Considere adicionar mais RAM ao sistema se o uso constante for superior a 90%.",
+        "confidence": null
+      },
+      {
+        "id": "H7",
+        "label": "Falso positivo do sistema de segurança (Bloqueio por Antivírus)",
+        "description": "O antivírus ou Windows Defender identificou erroneamente um arquivo do jogo como ameaça e o removeu ou bloqueou sua execução.",
+        "recommendation": "Adicione a pasta de instalação do jogo como exceção no seu antivírus e no Windows Defender. Verifique a quarentena do antivírus para restaurar arquivos removidos incorretamente.",
+        "confidence": null
+      }
+    ]
+  },
+
+  "rules": {
+    "_comment": "Regras de produção no formato SE...ENTÃO. conditions é uma lista de IDs de fatos (AND implícito). conclusion aponta para um ID de fato inferido ou hipótese. fired_count e last_fired são para rastreamento em tempo de execução.",
+    "items": [
+      {
+        "id": "R01",
+        "label": "Crash com overlay do Discord ativo → suspeita de overlay",
+        "conditions": ["F01", "F23"],
+        "conclusion": {
+          "fact_id": "F_INF_02",
+          "value": true
+        },
+        "conclusion_type": "intermediate",
+        "priority": 2,
+        "explanation_why": "Estou avaliando a hipótese de conflito de overlay. O crash combinado com o Discord ativo é um padrão conhecido desse problema.",
+        "explanation_how": "A regra R01 foi ativada porque você confirmou que o jogo fecha sozinho (F01) e o overlay do Discord está ativo (F23).",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R02",
+        "label": "Erro ao abrir + overlay Steam + Rivatuner → Conflito de overlay",
+        "conditions": ["F06", "F24", "F26"],
+        "conclusion": {
+          "hypothesis_id": "H1",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 3,
+        "explanation_why": "Estou verificando se múltiplos overlays ativos no momento da inicialização causam conflito. É uma das causas mais comuns de falha ao abrir.",
+        "explanation_how": "A regra R02 foi ativada porque o erro ocorre ao abrir (F06), o overlay da Steam está ativo (F24) e o Rivatuner/MSI Afterburner está rodando (F26).",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R03",
+        "label": "Queda de FPS + overlay GPU ativo → suspeita de overlay",
+        "conditions": ["F02", "F25"],
+        "conclusion": {
+          "fact_id": "F_INF_02",
+          "value": true
+        },
+        "conclusion_type": "intermediate",
+        "priority": 2,
+        "explanation_why": "Estou investigando conflitos de overlay. O overlay da GPU (GeForce/Adrenalin) é conhecido por causar stuttering em certos jogos.",
+        "explanation_how": "A regra R03 foi disparada pela combinação de queda de FPS (F02) e overlay de GPU ativo (F25).",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R04",
+        "label": "Steam + Rockstar vinculado + Social Club → H2",
+        "conditions": ["F10", "F11", "F12"],
+        "conclusion": {
+          "hypothesis_id": "H2",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 3,
+        "explanation_why": "Verifico a hipótese de falha de autenticação entre launchers. A combinação de Steam + Rockstar vinculado é o cenário clássico desse erro.",
+        "explanation_how": "R04 foi ativada: erro no launcher Steam (F10), conta Rockstar vinculada (F11) e mensagem do Social Club (F12) foram todos confirmados.",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R05",
+        "label": "Erro na Steam + autenticação de terceiros → H2",
+        "conditions": ["F10", "F13"],
+        "conclusion": {
+          "hypothesis_id": "H2",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 2,
+        "explanation_why": "Erro de autenticação no launcher indica possível problema de vinculação entre contas.",
+        "explanation_how": "R05 foi disparada: erro no launcher Steam (F10) + erro de autenticação de terceiros (F13).",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R06",
+        "label": "Falha de sync na nuvem + crash → H2",
+        "conditions": ["F14", "F01"],
+        "conclusion": {
+          "hypothesis_id": "H2",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 2,
+        "explanation_why": "Falha na sincronização de saves pode indicar problema de sessão/autenticação com o servidor da Steam.",
+        "explanation_how": "R06 foi ativada: sincronização na nuvem falhou (F14) e o jogo fecha sozinho (F01).",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R07",
+        "label": "Mensagem de DLL ausente → suspeita de integridade",
+        "conditions": ["F16"],
+        "conclusion": {
+          "fact_id": "F_INF_01",
+          "value": true
+        },
+        "conclusion_type": "intermediate",
+        "priority": 1,
+        "explanation_why": "Mensagem de DLL ausente é um indicador direto de arquivo corrompido ou faltante na instalação.",
+        "explanation_how": "R07 foi disparada apenas pela presença do erro de DLL (F16), que é sinal forte de corrupção de arquivos.",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R08",
+        "label": "Suspeita de integridade + erro ao abrir → H3",
+        "conditions": ["F_INF_01", "F06"],
+        "conclusion": {
+          "hypothesis_id": "H3",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 2,
+        "explanation_why": "Uma suspeita de integridade que se manifesta já na abertura do jogo aponta para arquivo essencial corrompido.",
+        "explanation_how": "R08 encadeou o fato inferido de suspeita de integridade (F_INF_01) com o erro imediato ao abrir (F06).",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R09",
+        "label": "Tela preta no segundo plano + mods → H3",
+        "conditions": ["F04", "F22"],
+        "conclusion": {
+          "hypothesis_id": "H3",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 2,
+        "explanation_why": "Jogo abrindo sem exibir imagem com mods instalados sugere que um mod corrompeu arquivos de renderização.",
+        "explanation_how": "R09 foi ativada: jogo abre sem imagem (F04) + mods presentes no diretório (F22).",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R10",
+        "label": "Áudio falhando + HDD antigo → suspeita de integridade",
+        "conditions": ["F08", "F31"],
+        "conclusion": {
+          "fact_id": "F_INF_01",
+          "value": true
+        },
+        "conclusion_type": "intermediate",
+        "priority": 2,
+        "explanation_why": "HDD antigo com falhas de leitura pode corromper arquivos de áudio e causar os estalos reportados.",
+        "explanation_how": "R10 conectou falha de áudio (F08) com a presença de HDD antigo (F31), indicando possível problema de leitura de disco.",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R11",
+        "label": "Queda de FPS + CPU acima de 85°C → H4",
+        "conditions": ["F02", "F27"],
+        "conclusion": {
+          "hypothesis_id": "H4",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 3,
+        "explanation_why": "CPU acima de 85°C é temperatura crítica que aciona o Thermal Throttling, causando exatamente as quedas de FPS que você relatou.",
+        "explanation_how": "R11 foi disparada: queda de FPS (F02) + temperatura crítica da CPU (F27).",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R12",
+        "label": "Tela congela + GPU acima de 85°C → H4",
+        "conditions": ["F09", "F28"],
+        "conclusion": {
+          "hypothesis_id": "H4",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 3,
+        "explanation_why": "GPU superaquecendo leva ao congelamento de imagem enquanto outros processos (áudio) continuam, exatamente o que você descreveu.",
+        "explanation_how": "R12 foi ativada: tela congela com som rodando (F09) + GPU acima de 85°C (F28).",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R13",
+        "label": "Erro só após horas + CPU quente → H4",
+        "conditions": ["F07", "F27"],
+        "conclusion": {
+          "hypothesis_id": "H4",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 3,
+        "explanation_why": "Problemas que surgem apenas após horas de uso são característicos de superaquecimento progressivo.",
+        "explanation_how": "R13: erro tardio (F07) + CPU quente (F27) = padrão clássico de thermal throttling acumulativo.",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R14",
+        "label": "Queda de FPS + driver GPU antigo → H5",
+        "conditions": ["F02", "F19"],
+        "conclusion": {
+          "hypothesis_id": "H5",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 2,
+        "explanation_why": "Driver antigo pode ser incompatível com APIs gráficas mais recentes exigidas pelo jogo, causando perda de desempenho.",
+        "explanation_how": "R14 foi ativada: queda de FPS (F02) + driver desatualizado há mais de 6 meses (F19).",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R15",
+        "label": "BSOD + driver GPU antigo → H5",
+        "conditions": ["F17", "F19"],
+        "conclusion": {
+          "hypothesis_id": "H5",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 3,
+        "explanation_why": "BSOD causado por driver de vídeo é um dos erros mais comuns, especialmente com drivers desatualizados.",
+        "explanation_how": "R15: tela azul (F17) + driver GPU desatualizado (F19) = forte evidência de driver defeituoso.",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R16",
+        "label": "Artefatos visuais + Windows atualizado recentemente → H5",
+        "conditions": ["F03", "F18"],
+        "conclusion": {
+          "hypothesis_id": "H5",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 2,
+        "explanation_why": "Atualizações do Windows frequentemente entram em conflito com drivers de vídeo, gerando artefatos visuais.",
+        "explanation_how": "R16 foi ativada: artefatos na tela (F03) iniciados após atualização recente do Windows (F18).",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R17",
+        "label": "RAM > 95% + erro após horas → H6",
+        "conditions": ["F29", "F07"],
+        "conclusion": {
+          "hypothesis_id": "H6",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 3,
+        "explanation_why": "Uso de RAM crescendo ao longo do tempo até 95%+ é o padrão clássico de memory leak.",
+        "explanation_how": "R17: alto uso de RAM (F29) + erro que só aparece horas depois de jogar (F07) = indicativo de vazamento de memória.",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R18",
+        "label": "Disco em 100% + loading longo → H6",
+        "conditions": ["F30", "F05"],
+        "conclusion": {
+          "hypothesis_id": "H6",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 2,
+        "explanation_why": "Disco em 100% constante impede que o jogo carregue dados na velocidade necessária.",
+        "explanation_how": "R18: uso de disco em 100% (F30) + loadings extremamente longos (F05) apontam para gargalo de I/O, possivelmente por falta de RAM forçando uso de memória virtual.",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R19",
+        "label": "Crash + notificação de permissão negada → H7",
+        "conditions": ["F01", "F20"],
+        "conclusion": {
+          "hypothesis_id": "H7",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 2,
+        "explanation_why": "Notificação de permissão negada ao executar o jogo sugere que o antivírus ou o sistema está impedindo o executável de rodar.",
+        "explanation_how": "R19: crash (F01) + notificação de permissão negada (F20) indicam bloqueio por sistema de segurança.",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R20",
+        "label": "Antivírus bloqueou + DLL ausente → H7",
+        "conditions": ["F21", "F16"],
+        "conclusion": {
+          "hypothesis_id": "H7",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 3,
+        "explanation_why": "DLL 'ausente' após o antivírus agir é quase sempre um falso positivo: o antivírus deletou o arquivo por engano.",
+        "explanation_how": "R20 foi disparada: antivírus bloqueou arquivo do jogo (F21) + mensagem de DLL ausente (F16) = o antivírus removeu a DLL.",
+        "fired_count": 0,
+        "last_fired": null
+      },
+      {
+        "id": "R21",
+        "label": "Suspeita de overlay confirmada → H1",
+        "conditions": ["F_INF_02"],
+        "conclusion": {
+          "hypothesis_id": "H1",
+          "value": true
+        },
+        "conclusion_type": "hypothesis",
+        "priority": 1,
+        "explanation_why": "Qualquer suspeita de conflito de overlay, se confirmada por pelo menos uma regra, já é suficiente para levantar a hipótese H1.",
+        "explanation_how": "R21 elevou a suspeita de overlay (F_INF_02) ao nível de hipótese definitiva H1.",
+        "fired_count": 0,
+        "last_fired": null
+      }
+    ]
+  },
+
+  "session": {
+    "_comment": "Estado de sessão em tempo de execução. Populado pelo motor de inferência (P1) durante uma consulta ativa. Deve ser zerado ao iniciar uma nova sessão.",
+    "session_id": null,
+    "started_at": null,
+    "strategy": null,
+    "facts_confirmed": [],
+    "facts_denied": [],
+    "facts_unknown": [],
+    "facts_inferred": [],
+    "rules_fired": [],
+    "hypotheses_confirmed": [],
+    "hypotheses_rejected": [],
+    "current_goal": null,
+    "questions_asked": []
+  }
+}
