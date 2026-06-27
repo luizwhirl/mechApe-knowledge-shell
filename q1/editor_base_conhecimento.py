@@ -1,10 +1,3 @@
-"""
-Editor da Base de Conhecimento do MechApe.
-
-Fornece CRUD programatico e uma interface CLI para fatos e regras, mantendo a
-persistencia em arquivo JSON externo conforme o Modulo 1 do enunciado.
-"""
-
 from __future__ import annotations
 
 import argparse
@@ -40,16 +33,12 @@ FACT_CATEGORIES = {
 FACT_TYPES = {"boolean", "numeric", "categorical"}
 FACT_SOURCES = {"user_input", "inferred"}
 
-# ==============================================================================
-# CONFIGURAÇÕES DE INTERFACE RETRÔ
-# ==============================================================================
 AZUL = "\033[0;34m"
 AZUL_BRILHANTE = "\033[1;34m"
 REVERSE = "\033[7m"
 RESET = "\033[0m"
 
 def print_retro(texto: str, atraso: float = 0.005, nova_linha: bool = True):
-    """Imprime o texto com um leve efeito de digitação de terminal antigo."""
     for caractere in texto:
         sys.stdout.write(caractere)
         sys.stdout.flush()
@@ -79,7 +68,6 @@ def exibir_cabecalho():
     print(RESET)
 
 def prompt_choice(texto: str, opcoes: list[str], padrao: str | None = None) -> str:
-    """Exibe uma lista de opções numeradas e retorna a escolha do usuário."""
     print(f"\n{AZUL_BRILHANTE}{texto}{RESET}")
     for i, op in enumerate(opcoes, 1):
         marcador = " (Padrão)" if padrao == op else ""
@@ -97,7 +85,6 @@ def prompt_choice(texto: str, opcoes: list[str], padrao: str | None = None) -> s
         print(f"{AZUL}[ERRO]: Opção inválida. Digite um número de 1 a {len(opcoes)}.{RESET}")
 
 def prompt_choice_edit(texto: str, opcoes: list[str], atual: str) -> str | None:
-    """Exibe uma lista de opções para edição, permitindo manter o valor atual."""
     print(f"\n{AZUL_BRILHANTE}{texto} [Atual: {atual}] (Pressione ENTER para manter){RESET}")
     for i, op in enumerate(opcoes, 1):
         print(f"{AZUL}  [{i}] {op}{RESET}")
@@ -112,22 +99,16 @@ def prompt_choice_edit(texto: str, opcoes: list[str], atual: str) -> str | None:
                 return opcoes[idx]
         print(f"{AZUL}[ERRO]: Opção inválida. Digite um número de 1 a {len(opcoes)}.{RESET}")
 
-# ==============================================================================
-
-
 class EditorError(ValueError):
-    """Erro de validacao ou operacao invalida no editor."""
-
+    pass
 
 @dataclass(frozen=True)
 class RemovalReport:
     removed_id: str
     removed_rules: list[str]
 
-
 def _now_backup_stamp() -> str:
     return datetime.now().strftime("%Y%m%d%H%M%S")
-
 
 def _parse_scalar(value: str | bool | int | float | None) -> Any:
     if not isinstance(value, str):
@@ -147,7 +128,6 @@ def _parse_scalar(value: str | bool | int | float | None) -> Any:
     except ValueError:
         return normalized
 
-
 def _format_rule(rule: dict[str, Any]) -> str:
     conclusion = rule["conclusion"]
     if "fact_id" in conclusion:
@@ -159,9 +139,7 @@ def _format_rule(rule: dict[str, Any]) -> str:
         f"{target} = {conclusion['value']} | prioridade {rule['priority']}"
     )
 
-
 class KnowledgeBaseEditor:
-    """API programatica para cadastro, edicao, remocao e persistencia da base."""
 
     def __init__(self, path: str | Path = DEFAULT_KB_PATH) -> None:
         self.path = Path(path)
@@ -179,7 +157,9 @@ class KnowledgeBaseEditor:
         target = Path(path) if path else self.path
         target.parent.mkdir(parents=True, exist_ok=True)
         if backup and target.exists():
-            backup_path = target.with_suffix(target.suffix + f".bak-{_now_backup_stamp()}")
+            backup_dir = target.parent / "backups"
+            backup_dir.mkdir(parents=True, exist_ok=True)
+            backup_path = backup_dir / f"{target.name}.bak-{_now_backup_stamp()}"
             shutil.copy2(target, backup_path)
         with target.open("w", encoding="utf-8") as file:
             json.dump(self.data, file, ensure_ascii=False, indent=2)
@@ -667,7 +647,7 @@ def run_interactive(editor: KnowledgeBaseEditor, *, backup: bool) -> None:
         "0": "exit",
     }
     while True:
-        sys.stdout.write("\033[H\033[2J") # Limpa a tela do terminal de forma limpa
+        sys.stdout.write("\033[H\033[2J") 
         exibir_cabecalho()
         
         print(f"{AZUL_BRILHANTE}  1. Listar fatos{RESET}")
@@ -731,7 +711,6 @@ def run_interactive(editor: KnowledgeBaseEditor, *, backup: bool) -> None:
                     "category": category,
                     "source": source,
                 }
-                # Remove chaves None para não sobrescrever
                 updates = {k: v for k, v in updates.items() if v is not None}
                 
                 editor.edit_fact(fact_id, **updates)
@@ -797,7 +776,6 @@ def run_interactive(editor: KnowledgeBaseEditor, *, backup: bool) -> None:
         except EditorError as error:
             print(f"\n{AZUL_BRILHANTE}[ERRO DE OPERAÇÃO]: {error}{RESET}")
         
-        # Pausa antes de limpar a tela e voltar ao menu
         if action:
             input(f"\n{AZUL}Pressione [ENTER] para retornar ao menu principal...{RESET}")
 
