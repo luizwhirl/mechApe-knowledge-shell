@@ -60,6 +60,23 @@ Ferramenta genérica para construção de aplicações baseadas em conhecimento 
 - ☑️ Base com pelo menos 5 hipóteses distintas (7 hipóteses/diagnósticos mapeados)
 - [ ] Demonstração de pelo menos 3 consultas diferentes
 
+### Questão 2 - Sistema A: Identificador estilo Akinator (2.1) `P4`
+Sistema baseado em conhecimento que adivinha um personagem fictício (filmes, séries, cartoons, animes e jogos) por meio de perguntas binárias, reduzindo as hipóteses a cada resposta.
+
+- ☑️ Base com 31 personagens e 26 atributos (requisito: ≥ 20 entidades e ≥ 15 atributos)
+- ☑️ Conhecimento explícito e declarativo em JSON, editável sem alterar o código-fonte
+- ☑️ Inferência por atualização bayesiana de crenças + escolha da pergunta por maior ganho de informação (entropia de Shannon)
+- ☑️ Respostas `Sim` / `Não` / `Não Sei` e exibição da hipótese atual mais provável a cada rodada
+- ☑️ Tolerância a respostas subjetivas (sem eliminação brusca) e palpite por dominância relativa
+- ☑️ 15 testes automatizados — 100% de acerto, média de ~7 perguntas por personagem
+
+Implementado em [`q2/q2-1.py/`](q2/q2-1.py/): `akinator.py` (motor de inferência), `interface.py` (CLI retrô) e `knowledge_base.json` (base). Para jogar e para rodar os testes, a partir da raiz do projeto:
+
+python q2/q2-1.py/interface.py
+python q2/q2-1.py/tests/test_akinator.py
+
+> O Sistema B da Questão 2 (recomendação por ontologias, `P5`) fica em [`q2/q2-2.py/`](q2/q2-2.py/).
+
 ---
 
 ## 🕹️ Como Executar o Programa Principal
@@ -157,6 +174,6 @@ python -m unittest q1.tests.test_interface
 
 - Relatório técnico completo da Questão 1.
 - Demonstração de pelo menos 3 consultas diferentes.
-- Questão 2 e Questão 3 conforme divisão de tarefas do grupo.
+- Questão 2 - Sistema B e Questão 3 conforme divisão de tarefas do grupo.
 
 > ⚠️ Aviso: Os sistemas de diagnóstico desenvolvidos neste projeto têm finalidade exclusivamente educacional e académica, não devendo ser usados como ferramentas reais de diagnóstico técnico.

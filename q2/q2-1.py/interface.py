@@ -8,11 +8,8 @@ import sys
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
-
-from q2.akinator import Akinator
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from akinator import Akinator
 
 # -- Paleta ANSI -----------------------------------------------------------
 VERDE         = "\033[0;32m"
@@ -118,6 +115,7 @@ def _mostrar_estatisticas(akinator: Akinator, acertou: bool) -> None:
 
 
 def jogar() -> None:
+    """Laço principal: pergunta, atualiza o motor e palpita quando há convicção."""
     akinator = Akinator()
     total = len(akinator.all_characters)
 
@@ -138,26 +136,23 @@ def jogar() -> None:
             print(f"\n  {VERMELHO}  Respostas contraditórias — você me venceu!{RESET}\n")
             break
 
-        if akinator.perguntas_esgotadas():
+        attr = akinator.proxima_pergunta()
+        if attr is None or akinator.perguntas_esgotadas():
+            # Sem perguntas úteis: arrisca o melhor palpite em vez de desistir.
             palpite = akinator.melhor_palpite()
             if palpite:
-                print(f"\n  {AMARELO}  Perguntas esgotadas. Minha melhor aposta:{RESET}")
+                print(f"\n  {AMARELO}  Sem mais perguntas. Minha melhor aposta:{RESET}")
                 acertou = _fazer_palpite(akinator, palpite)
-            break
-
-        attr = akinator.proxima_pergunta()
-        if attr is None:
             break
 
         cands = len(akinator.candidates)
         print(f"  {_barra_candidatos(cands, total)}")
 
-        # Mostra top-3 candidatos quando o sistema começa a convergir
+        # Exibe a hipótese atual mais provável a cada rodada (requisito da questão).
         confianca = akinator.confianca_top()
-        if confianca >= 0.25 and cands <= 8:
-            top3 = akinator.top_n(min(3, cands))
-            nomes = ", ".join(c["name"].split(" ")[0] for c, _ in top3)
-            print(f"  {DIM}  Em análise: {nomes}  ({confianca:.0%}){RESET}")
+        top3 = akinator.top_n(min(3, cands))
+        nomes = ", ".join(c["name"].split(" ")[0] for c, _ in top3)
+        print(f"  {DIM}  Hipótese atual: {nomes}  ({confianca:.0%}){RESET}")
 
         print(f"  {DIM}  Pergunta #{akinator.total_perguntas() + 1}{RESET}\n")
 

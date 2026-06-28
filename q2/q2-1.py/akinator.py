@@ -1,9 +1,8 @@
 """
 Motor de inferência probabilístico do Akinator — Questão 2.1
 
-Cada resposta atualiza os scores de todos os candidatos via regra de Bayes
-(likelihood × prior), em vez de eliminar candidatos estritamente.
-Isso torna o sistema tolerante a respostas ambíguas ou imprecisas.
+Cada resposta atualiza os scores via regra de Bayes, em vez de eliminar
+candidatos — o que torna o sistema tolerante a respostas ambíguas.
 """
 
 from __future__ import annotations
@@ -13,10 +12,12 @@ from pathlib import Path
 
 
 class Akinator:
-    # P(resposta errada | atributo divergente) — tolerância a erros do usuário
-    EPSILON: float = 0.05
-    # Adivinha quando o personagem mais provável atinge este nível de confiança
-    CONFIDENCE_THRESHOLD: float = 0.85
+    # Parâmetros de calibração do motor
+    EPSILON: float = 0.20               # Tolerância a respostas subjetivas/divergentes
+    CONFIDENCE_THRESHOLD: float = 0.95  # Confiança absoluta para palpitar
+    MIN_QUESTIONS: int = 7              # Mínimo de perguntas antes de qualquer palpite
+    DOMINANCE_RATIO: float = 8.0        # Palpita se o líder for N× mais provável que o 2º
+    DOMINANCE_MIN_CONF: float = 0.50    # Confiança mínima para o palpite por dominância
 
     def __init__(self, kb_path: str | Path | None = None):
         if kb_path is None:
@@ -53,10 +54,7 @@ class Akinator:
                 self.scores[c["id"]] *= self.EPSILON
 
     def _entropia_ponderada(self, attr_id: str) -> float:
-        """
-        Entropia de Shannon ponderada pelas probabilidades atuais.
-        Mede o ganho de informação esperado ao perguntar sobre este atributo.
-        """
+        """Ganho de informação esperado da pergunta (entropia de Shannon ponderada pelas probabilidades)."""
         norm = self._normalized()
         p_sim = sum(
             norm[c["id"]] for c in self.all_characters
@@ -72,16 +70,9 @@ class Akinator:
     # ------------------------------------------------------------------
 
     def _atributos_implicitos(self) -> set[str]:
-        """
-        Retorna IDs de atributos que são logicamente determinados por
-        respostas já dadas — perguntar sobre eles seria redundante.
-
-        Regras:
-        - A06 (adulto) ↔ A19 (criança) são inversas: responder uma elimina a outra.
-        - A04=F (não animado) → A05=F (não pode ser anime se não é animado).
-        - A05=T (anime) → A04=T (se é anime, com certeza é animado).
-        """
+        """IDs já determinados pela lógica das respostas anteriores (perguntá-los seria redundante)."""
         pular: set[str] = set()
+        # Pares de atributos logicamente ligados: adulto↔criança, animado↔anime↔videogame.
         if "A06" in self.answered:
             pular.add("A19")
         if "A19" in self.answered:
@@ -90,6 +81,11 @@ class Akinator:
             pular.add("A05")
         if self.answered.get("A05") is True:
             pular.add("A04")
+        if self.answered.get("A04") is True:
+            pular.add("A26")
+        if self.answered.get("A26") is True:
+            pular.add("A04")
+            pular.add("A05")
         return pular
 
     def proxima_pergunta(self) -> dict | None:
@@ -118,15 +114,13 @@ class Akinator:
 
     @property
     def candidates(self) -> list[dict]:
-        """
-        Personagens com probabilidade normalizada >= 1/n (quinhão justo).
-        Equivale aos candidatos 'ainda viáveis' na distribuição atual.
-        """
-        n = len(self.all_characters)
-        threshold = 1.0 / n
+        """Candidatos ainda viáveis: probabilidade >= 10% da do líder atual (limiar relativo)."""
         norm = self._normalized()
+        if not norm:
+            return self.all_characters[:]
+        top_score = max(norm.values())
+        threshold = top_score * 0.10
         ativos = [c for c in self.all_characters if norm[c["id"]] >= threshold]
-        # Garante ao menos 1 candidato (o mais provável) mesmo se todos estão abaixo
         return ativos if ativos else [self.melhor_palpite()]
 
     def confianca_top(self) -> float:
@@ -135,7 +129,16 @@ class Akinator:
         return max(norm.values()) if norm else 0.0
 
     def pode_adivinhar(self) -> bool:
-        return self.confianca_top() >= self.CONFIDENCE_THRESHOLD
+        """Palpita (após o mínimo de perguntas) por confiança absoluta alta ou dominância sobre o 2º."""
+        if self.total_perguntas() < self.MIN_QUESTIONS:
+            return False
+        top2 = self.top_n(2)
+        conf = top2[0][1] if top2 else 0.0
+        if conf >= self.CONFIDENCE_THRESHOLD:
+            return True
+        if len(top2) >= 2 and top2[1][1] > 0 and conf >= self.DOMINANCE_MIN_CONF:
+            return (top2[0][1] / top2[1][1]) >= self.DOMINANCE_RATIO
+        return False
 
     def sem_candidatos(self) -> bool:
         """True apenas se todos os scores colapsaram a valores ínfimos."""
