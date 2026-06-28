@@ -1,3 +1,5 @@
+# mechape_hub.py
+
 import sys
 import os
 import time
@@ -67,6 +69,7 @@ def menu_principal():
         print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}1. EXECUTAR QUESTÃO 1 (Motor de Inferência){RESET}                 {LARANJA}║{RESET}")
         print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}2. EXECUTAR QUESTÃO 2 (Identificador de Personagens){RESET}        {LARANJA}║{RESET}")
         print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}3. EXECUTAR QUESTÃO 3 (Agente LLM){RESET}                          {LARANJA}║{RESET}")
+        print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}4. EXIBIR CRÉDITOS DA EQUIPE{RESET}                                {LARANJA}║{RESET}")
         print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}0. DESLIGAR TERMINAL (SAIR){RESET}                                 {LARANJA}║{RESET}")
         print(f"{LARANJA}╚══════════════════════════════════════════════════════════════╝{RESET}")
         print()
@@ -103,7 +106,13 @@ def menu_principal():
             
             print_retro("\n[AVISO]: Módulo da Questão 3 ainda em desenvolvimento.", VERMELHO_CLARO)
             time.sleep(1.5)
-            
+        elif opcao == "4":
+            print(f"\n{LARANJA}SISTEMA DESENVOLVIDO PELA EQUIPE MECHAPE (IA 2026.1):{RESET}")
+            print_retro(f"{VERMELHO_CLARO}  • Arquitetura & Motor (P1): Manu", VERMELHO_CLARO)
+            print_retro(f"{VERMELHO_CLARO}  • Base de Dados & Editor (P2): Indias", VERMELHO_CLARO)
+            print_retro(f"{VERMELHO_CLARO}  • Interface & Explicação (P3): João Felipe", VERMELHO_CLARO)
+            print_retro(f"{VERMELHO_CLARO}  • Diagnósticos Específicos (P4/P5): Lucas & Rayssa{RESET}\n", VERMELHO_CLARO)
+            input(f"{LARANJA}Pressione [ENTER] para continuar...{RESET}")
         elif opcao == "0":
             print_retro("\n[SISTEMA]: Encerrando Hub... Desligando terminal. Adeus.", LARANJA)
             time.sleep(1)
@@ -122,7 +131,7 @@ if __name__ == "__main__":
             
         elif sys.platform == "darwin":
             caminho_absoluto = os.path.abspath(caminho_script)
-            comando = "osascript -e 'tell application \"Terminal\" to do script \"python3 " + caminho_absoluto + " --child-process\"'"
+            comando = f"""osascript -e 'tell application "Terminal" to do script "python3 {caminho_absoluto} --child-process"'"""
             os.system(comando)
             
         else:

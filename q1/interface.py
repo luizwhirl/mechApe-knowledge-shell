@@ -9,7 +9,6 @@ import sys
 import time
 from pathlib import Path
 
-# Garante a importação correta dos módulos locais
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -17,10 +16,8 @@ if str(ROOT) not in sys.path:
 from q1.motor_inferencia import MotorInferencia
 from q1.explicador import ExplicadorInferencia
 
-# Importando o novo editor azul (Terminal de Desenvolvimento)
 from q1.editor_base_conhecimento import KnowledgeBaseEditor, run_interactive
 
-# Cores ANSI para estética fósforo verde de terminal antigo
 VERDE = "\033[0;32m"
 VERDE_BRILHANTE = "\033[1;32m"
 REVERSE = "\033[7m"
@@ -29,7 +26,6 @@ RESET = "\033[0m"
 CAMINHO_KB = ROOT / "q1" / "tests" / "knowledge_base.json"
 
 def print_retro(texto: str, atraso: float = 0.005, nova_linha: bool = True):
-    """Imprime o texto com um leve efeito de digitação de terminal antigo."""
     for caractere in texto:
         sys.stdout.write(caractere)
         sys.stdout.flush()
@@ -50,10 +46,6 @@ def exibir_cabecalho():
     print("      MECHAPE KNOWLEDGE SYSTEM - OS VERSION 1986.06         ")
     print("============================================================")
     print(RESET)
-
-# ======================================================================
-# MÓDULO DE CONSULTA E DIAGNÓSTICO
-# ======================================================================
 
 def executar_consulta():
     motor = MotorInferencia(caminho_base=str(CAMINHO_KB))
@@ -121,42 +113,29 @@ def executar_consulta():
     print(f"{VERDE}------------------------------------------------------------{RESET}")
     input(f"\n{VERDE}Pressione [ENTER] para retornar...{RESET}")
 
-# ======================================================================
-# MENU PRINCIPAL
-# ======================================================================
-
 def menu_principal():
     while True:
         sys.stdout.write("\033[H\033[2J")
         exibir_cabecalho()
         print(f"{VERDE_BRILHANTE}  1. INICIAR NOVA CONSULTA DIAGNÓSTICA{RESET}")
-        print(f"{VERDE}  2. EXIBIR CRÉDITOS DO SISTEMA OPERACIONAL{RESET}")
-        print(f"{VERDE}  3. MODO DESENVOLVEDOR (EDITAR BASE DE CONHECIMENTO){RESET}")
-        print(f"{VERDE}  0. DESLIGAR TERMINAL (SAIR){RESET}\n")
+        print(f"{VERDE}  2. MODO DESENVOLVEDOR (EDITAR BASE DE CONHECIMENTO){RESET}")
+        print(f"{VERDE}  0. RETORNAR AO HUB PRINCIPAL{RESET}\n")
         
         opcao = input(f"{VERDE}SELECIONE UMA OPÇÃO COGNITIVA_> {RESET}").strip()
         
         if opcao == "1":
             executar_consulta()
         elif opcao == "2":
-            print(f"\n{VERDE}SISTEMA DESENVOLVIDO PELA EQUIPE MECHAPE (IA 2026.1):{RESET}")
-            print_retro(f"{VERDE}  • Arquitetura & Motor (P1): Manu")
-            print_retro(f"{VERDE}  • Base de Dados & Editor (P2): Indias")
-            print_retro(f"{VERDE}  • Interface & Explicação (P3): João Felipe")
-            print_retro(f"{VERDE}  • Diagnósticos Específicos (P4/P5): Lucas & Rayssa{RESET}\n")
-            input(f"{VERDE}Pressione [ENTER] para continuar...{RESET}")
-        elif opcao == "3":
             print_retro(f"\n{VERDE}[SISTEMA]: Transferindo controle para o subsistema de edição (Terminal Azul)...{RESET}")
             time.sleep(0.5)
             try:
-                # Instancia o KnowledgeBaseEditor e transfere controle para o azul interativo
                 editor_kb = KnowledgeBaseEditor(CAMINHO_KB)
                 run_interactive(editor_kb, backup=True)
             except Exception as e:
                 print(f"{VERDE}[ERRO CRÍTICO]: Falha ao iniciar o editor: {e}{RESET}")
                 input(f"{VERDE}Pressione [ENTER] para continuar...{RESET}")
         elif opcao == "0":
-            print_retro(f"\n{VERDE}[SISTEMA]: Finalizando buffers... Desligando. Adeus.{RESET}")
+            print_retro(f"\n{VERDE}[SISTEMA]: Finalizando buffers... Retornando ao Hub.{RESET}")
             break
         else:
             print(f"{VERDE}[ERRO]: Código de instrução inválido.{RESET}")
@@ -165,7 +144,6 @@ def menu_principal():
 if __name__ == "__main__":
     import os
     
-    # Verifica se o script já está rodando na nova janela
     if "--child-process" not in sys.argv:
         caminho_script = sys.argv[0]
         
@@ -183,10 +161,8 @@ if __name__ == "__main__":
             comando = f"gnome-terminal --geometry=120x35 -- bash -c 'python3 {caminho_absoluto} --child-process; exec bash'"
             os.system(comando)
             
-        # Encerra o processo "pai" silenciosamente
         sys.exit(0)
 
-    # Se a flag --child-process estiver presente, executa o programa
     try:
         menu_principal()
     except KeyboardInterrupt:
