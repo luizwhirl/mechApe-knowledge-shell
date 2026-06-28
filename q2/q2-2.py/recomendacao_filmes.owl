@@ -1,0 +1,583 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xml:base="http://exemplo.org/recomendacao_filmes.owl"
+         xmlns="http://exemplo.org/recomendacao_filmes.owl#">
+
+<owl:Ontology rdf:about="http://exemplo.org/recomendacao_filmes.owl"/>
+
+<owl:ObjectProperty rdf:about="#temGenero">
+  <rdfs:domain rdf:resource="#Obra"/>
+  <rdfs:range rdf:resource="#Genero"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#dirigidoPor">
+  <rdfs:domain rdf:resource="#Obra"/>
+  <rdfs:range rdf:resource="#Diretor"/>
+  <owl:inverseOf rdf:resource="#dirigiu"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#disponivelEm">
+  <rdfs:domain rdf:resource="#Obra"/>
+  <rdfs:range rdf:resource="#Plataforma"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#temClassificacao">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Obra"/>
+  <rdfs:range rdf:resource="#Publico"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#similarA">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+  <rdfs:domain rdf:resource="#Obra"/>
+  <rdfs:range rdf:resource="#Obra"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#dirigiu">
+  <rdfs:domain rdf:resource="#Diretor"/>
+  <rdfs:range rdf:resource="#Obra"/>
+  <owl:inverseOf rdf:resource="#dirigidoPor"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#recomendadoApos">
+  <rdfs:domain rdf:resource="#Obra"/>
+  <rdfs:range rdf:resource="#Obra"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#doMesmoDiretorQue">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#SymmetricProperty"/>
+  <rdfs:domain rdf:resource="#Obra"/>
+  <rdfs:range rdf:resource="#Obra"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="#temTitulo">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Obra"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#temAno">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Obra"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#temNota">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Obra"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#temDuracaoMin">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Filme"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#numTemporadas">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Serie"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#nomePessoa">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Diretor"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#nomePlataforma">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Plataforma"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#ehPremiado">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#Obra"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+</owl:DatatypeProperty>
+
+<owl:Class rdf:about="#Obra">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Filme">
+  <rdfs:subClassOf rdf:resource="#Obra"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Serie">
+  <rdfs:subClassOf rdf:resource="#Obra"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Genero">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Acao">
+  <rdfs:subClassOf rdf:resource="#Genero"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Drama">
+  <rdfs:subClassOf rdf:resource="#Genero"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Comedia">
+  <rdfs:subClassOf rdf:resource="#Genero"/>
+</owl:Class>
+
+<owl:Class rdf:about="#FiccaoCientifica">
+  <rdfs:subClassOf rdf:resource="#Genero"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Terror">
+  <rdfs:subClassOf rdf:resource="#Genero"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Diretor">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Plataforma">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Publico">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Livre">
+  <rdfs:subClassOf rdf:resource="#Publico"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Adulto">
+  <rdfs:subClassOf rdf:resource="#Publico"/>
+</owl:Class>
+
+<owl:Class rdf:about="#ObraAclamada">
+  <rdfs:subClassOf rdf:resource="#Obra"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Obra"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#temNota"/>
+          <owl:someValuesFrom>
+            <rdfs:Datatype>
+              <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+              <owl:withRestrictions>
+                <rdf:Description>
+                  <rdf:first>
+                    <rdf:Description>
+                      <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">8.5</xsd:minInclusive>
+                    </rdf:Description>
+                  </rdf:first>
+                  <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                </rdf:Description>
+              </owl:withRestrictions>
+            </rdfs:Datatype>
+          </owl:someValuesFrom>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#FilmeDeAcao">
+  <rdfs:subClassOf rdf:resource="#Filme"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Filme"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#temGenero"/>
+          <owl:someValuesFrom rdf:resource="#Acao"/>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#ObraParaMaratonar">
+  <rdfs:subClassOf rdf:resource="#Serie"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Serie"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#numTemporadas"/>
+          <owl:someValuesFrom>
+            <rdfs:Datatype>
+              <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+              <owl:withRestrictions>
+                <rdf:Description>
+                  <rdf:first>
+                    <rdf:Description>
+                      <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</xsd:minInclusive>
+                    </rdf:Description>
+                  </rdf:first>
+                  <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                </rdf:Description>
+              </owl:withRestrictions>
+            </rdfs:Datatype>
+          </owl:someValuesFrom>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+</owl:Class>
+
+<owl:Class rdf:about="#RecomendacaoPremium">
+  <rdfs:subClassOf rdf:resource="#Obra"/>
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Obra"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#ehPremiado"/>
+          <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:hasValue>
+        </owl:Restriction>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#temNota"/>
+          <owl:someValuesFrom>
+            <rdfs:Datatype>
+              <owl:onDatatype rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+              <owl:withRestrictions>
+                <rdf:Description>
+                  <rdf:first>
+                    <rdf:Description>
+                      <xsd:minInclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">8.5</xsd:minInclusive>
+                    </rdf:Description>
+                  </rdf:first>
+                  <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                </rdf:Description>
+              </owl:withRestrictions>
+            </rdfs:Datatype>
+          </owl:someValuesFrom>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:subClassOf rdf:resource="#ObraAclamada"/>
+</owl:Class>
+
+<owl:NamedIndividual rdf:about="#Nolan">
+  <rdf:type rdf:resource="#Diretor"/>
+  <nomePessoa rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Christopher Nolan</nomePessoa>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Villeneuve">
+  <rdf:type rdf:resource="#Diretor"/>
+  <nomePessoa rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Denis Villeneuve</nomePessoa>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Peele">
+  <rdf:type rdf:resource="#Diretor"/>
+  <nomePessoa rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Jordan Peele</nomePessoa>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Gilligan">
+  <rdf:type rdf:resource="#Diretor"/>
+  <nomePessoa rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Vince Gilligan</nomePessoa>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Waititi">
+  <rdf:type rdf:resource="#Diretor"/>
+  <nomePessoa rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Taika Waititi</nomePessoa>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Schur">
+  <rdf:type rdf:resource="#Diretor"/>
+  <nomePessoa rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Michael Schur</nomePessoa>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Netflix">
+  <rdf:type rdf:resource="#Plataforma"/>
+  <nomePlataforma rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Netflix</nomePlataforma>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Prime">
+  <rdf:type rdf:resource="#Plataforma"/>
+  <nomePlataforma rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Prime Video</nomePlataforma>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Max">
+  <rdf:type rdf:resource="#Plataforma"/>
+  <nomePlataforma rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Max</nomePlataforma>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#g_acao">
+  <rdf:type rdf:resource="#Acao"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#g_drama">
+  <rdf:type rdf:resource="#Drama"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#g_comedia">
+  <rdf:type rdf:resource="#Comedia"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#g_ficcao">
+  <rdf:type rdf:resource="#FiccaoCientifica"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#g_terror">
+  <rdf:type rdf:resource="#Terror"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#c_livre">
+  <rdf:type rdf:resource="#Livre"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#c_adulto">
+  <rdf:type rdf:resource="#Adulto"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Inception">
+  <rdf:type rdf:resource="#Filme"/>
+  <temGenero rdf:resource="#g_ficcao"/>
+  <temGenero rdf:resource="#g_acao"/>
+  <dirigidoPor rdf:resource="#Nolan"/>
+  <disponivelEm rdf:resource="#Prime"/>
+  <disponivelEm rdf:resource="#Netflix"/>
+  <temClassificacao rdf:resource="#c_adulto"/>
+  <similarA rdf:resource="#Interstellar"/>
+  <similarA rdf:resource="#Tenet"/>
+  <rdf:type rdf:resource="#FilmeDeAcao"/>
+  <rdf:type rdf:resource="#RecomendacaoPremium"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A Origem</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2010</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">8.8</temNota>
+  <temDuracaoMin rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">148</temDuracaoMin>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Interstellar">
+  <rdf:type rdf:resource="#Filme"/>
+  <temGenero rdf:resource="#g_drama"/>
+  <temGenero rdf:resource="#g_ficcao"/>
+  <dirigidoPor rdf:resource="#Nolan"/>
+  <disponivelEm rdf:resource="#Prime"/>
+  <temClassificacao rdf:resource="#c_livre"/>
+  <rdf:type rdf:resource="#RecomendacaoPremium"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Interestelar</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2014</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">8.7</temNota>
+  <temDuracaoMin rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">169</temDuracaoMin>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Tenet">
+  <rdf:type rdf:resource="#Filme"/>
+  <temGenero rdf:resource="#g_ficcao"/>
+  <temGenero rdf:resource="#g_acao"/>
+  <dirigidoPor rdf:resource="#Nolan"/>
+  <disponivelEm rdf:resource="#Max"/>
+  <temClassificacao rdf:resource="#c_adulto"/>
+  <rdf:type rdf:resource="#FilmeDeAcao"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Tenet</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2020</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">7.3</temNota>
+  <temDuracaoMin rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">150</temDuracaoMin>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Dune">
+  <rdf:type rdf:resource="#Filme"/>
+  <temGenero rdf:resource="#g_ficcao"/>
+  <temGenero rdf:resource="#g_acao"/>
+  <dirigidoPor rdf:resource="#Villeneuve"/>
+  <disponivelEm rdf:resource="#Max"/>
+  <temClassificacao rdf:resource="#c_livre"/>
+  <similarA rdf:resource="#Arrival"/>
+  <rdf:type rdf:resource="#FilmeDeAcao"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Duna</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2021</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">8.0</temNota>
+  <temDuracaoMin rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">155</temDuracaoMin>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Arrival">
+  <rdf:type rdf:resource="#Filme"/>
+  <temGenero rdf:resource="#g_drama"/>
+  <temGenero rdf:resource="#g_ficcao"/>
+  <dirigidoPor rdf:resource="#Villeneuve"/>
+  <disponivelEm rdf:resource="#Netflix"/>
+  <temClassificacao rdf:resource="#c_livre"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">A Chegada</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2016</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">7.9</temNota>
+  <temDuracaoMin rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">116</temDuracaoMin>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#GetOut">
+  <rdf:type rdf:resource="#Filme"/>
+  <temGenero rdf:resource="#g_terror"/>
+  <dirigidoPor rdf:resource="#Peele"/>
+  <disponivelEm rdf:resource="#Netflix"/>
+  <temClassificacao rdf:resource="#c_adulto"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Corra!</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2017</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">7.7</temNota>
+  <temDuracaoMin rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">104</temDuracaoMin>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Nope">
+  <rdf:type rdf:resource="#Filme"/>
+  <temGenero rdf:resource="#g_terror"/>
+  <temGenero rdf:resource="#g_ficcao"/>
+  <dirigidoPor rdf:resource="#Peele"/>
+  <disponivelEm rdf:resource="#Prime"/>
+  <temClassificacao rdf:resource="#c_adulto"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Não! Não Olhe!</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2022</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">6.8</temNota>
+  <temDuracaoMin rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">130</temDuracaoMin>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Us">
+  <rdf:type rdf:resource="#Filme"/>
+  <temGenero rdf:resource="#g_terror"/>
+  <dirigidoPor rdf:resource="#Peele"/>
+  <disponivelEm rdf:resource="#Max"/>
+  <temClassificacao rdf:resource="#c_adulto"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nós</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2019</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">6.8</temNota>
+  <temDuracaoMin rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">116</temDuracaoMin>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#BreakingBad">
+  <rdf:type rdf:resource="#Serie"/>
+  <temGenero rdf:resource="#g_drama"/>
+  <temGenero rdf:resource="#g_acao"/>
+  <dirigidoPor rdf:resource="#Gilligan"/>
+  <disponivelEm rdf:resource="#Netflix"/>
+  <temClassificacao rdf:resource="#c_adulto"/>
+  <similarA rdf:resource="#BetterCall"/>
+  <rdf:type rdf:resource="#ObraParaMaratonar"/>
+  <rdf:type rdf:resource="#RecomendacaoPremium"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Breaking Bad</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2008</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">9.5</temNota>
+  <numTemporadas rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</numTemporadas>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#BetterCall">
+  <rdf:type rdf:resource="#Serie"/>
+  <temGenero rdf:resource="#g_drama"/>
+  <dirigidoPor rdf:resource="#Gilligan"/>
+  <disponivelEm rdf:resource="#Netflix"/>
+  <temClassificacao rdf:resource="#c_adulto"/>
+  <rdf:type rdf:resource="#ObraParaMaratonar"/>
+  <rdf:type rdf:resource="#RecomendacaoPremium"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Better Call Saul</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2015</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">8.9</temNota>
+  <numTemporadas rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</numTemporadas>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Westworld">
+  <rdf:type rdf:resource="#Serie"/>
+  <temGenero rdf:resource="#g_drama"/>
+  <temGenero rdf:resource="#g_ficcao"/>
+  <dirigidoPor rdf:resource="#Nolan"/>
+  <disponivelEm rdf:resource="#Max"/>
+  <temClassificacao rdf:resource="#c_adulto"/>
+  <rdf:type rdf:resource="#ObraParaMaratonar"/>
+  <rdf:type rdf:resource="#RecomendacaoPremium"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Westworld</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2016</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">8.5</temNota>
+  <numTemporadas rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</numTemporadas>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Dark">
+  <rdf:type rdf:resource="#Serie"/>
+  <temGenero rdf:resource="#g_drama"/>
+  <temGenero rdf:resource="#g_ficcao"/>
+  <dirigidoPor rdf:resource="#Villeneuve"/>
+  <disponivelEm rdf:resource="#Netflix"/>
+  <temClassificacao rdf:resource="#c_adulto"/>
+  <rdf:type rdf:resource="#ObraParaMaratonar"/>
+  <rdf:type rdf:resource="#RecomendacaoPremium"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Dark</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2017</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">8.7</temNota>
+  <numTemporadas rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</numTemporadas>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Jojo">
+  <rdf:type rdf:resource="#Filme"/>
+  <temGenero rdf:resource="#g_comedia"/>
+  <temGenero rdf:resource="#g_drama"/>
+  <dirigidoPor rdf:resource="#Waititi"/>
+  <disponivelEm rdf:resource="#Max"/>
+  <temClassificacao rdf:resource="#c_livre"/>
+  <similarA rdf:resource="#ThorRag"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Jojo Rabbit</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2019</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">7.9</temNota>
+  <temDuracaoMin rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">108</temDuracaoMin>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#ThorRag">
+  <rdf:type rdf:resource="#Filme"/>
+  <temGenero rdf:resource="#g_comedia"/>
+  <temGenero rdf:resource="#g_acao"/>
+  <dirigidoPor rdf:resource="#Waititi"/>
+  <disponivelEm rdf:resource="#Prime"/>
+  <temClassificacao rdf:resource="#c_livre"/>
+  <rdf:type rdf:resource="#FilmeDeAcao"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Thor: Ragnarok</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2017</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">7.9</temNota>
+  <temDuracaoMin rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">130</temDuracaoMin>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#GoodPlace">
+  <rdf:type rdf:resource="#Serie"/>
+  <temGenero rdf:resource="#g_comedia"/>
+  <dirigidoPor rdf:resource="#Schur"/>
+  <disponivelEm rdf:resource="#Netflix"/>
+  <temClassificacao rdf:resource="#c_livre"/>
+  <similarA rdf:resource="#Brooklyn99"/>
+  <rdf:type rdf:resource="#ObraParaMaratonar"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">The Good Place</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2016</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">8.2</temNota>
+  <numTemporadas rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</numTemporadas>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</ehPremiado>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#Brooklyn99">
+  <rdf:type rdf:resource="#Serie"/>
+  <temGenero rdf:resource="#g_comedia"/>
+  <dirigidoPor rdf:resource="#Schur"/>
+  <disponivelEm rdf:resource="#Netflix"/>
+  <temClassificacao rdf:resource="#c_livre"/>
+  <rdf:type rdf:resource="#ObraParaMaratonar"/>
+  <temTitulo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Brooklyn Nine-Nine</temTitulo>
+  <temAno rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2013</temAno>
+  <temNota rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">8.4</temNota>
+  <numTemporadas rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</numTemporadas>
+  <ehPremiado rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</ehPremiado>
+</owl:NamedIndividual>
+
+
+</rdf:RDF>
