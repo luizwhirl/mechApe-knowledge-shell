@@ -95,17 +95,17 @@ def menu_principal():
                 print_retro(f"[ERRO]: Arquivo não encontrado: {script_path}", VERMELHO_CLARO)
                 time.sleep(2)
         elif opcao == "3":
-            # print_retro("\n[SISTEMA]: Inicializando Questão 3...", LARANJA)
-            # time.sleep(0.5)
-            # script_path = ROOT / "q3" / "agente_llm.py"
-            # if script_path.exists():
-            #     subprocess.run([sys.executable, str(script_path), "--child-process"])
-            # else:
-            #     print_retro(f"[ERRO]: Arquivo não encontrado: {script_path}", VERMELHO_CLARO)
-            #     time.sleep(2)
+            print_retro("\n[SISTEMA]: Inicializando Questão 3...", LARANJA)
+            time.sleep(0.5)
+            script_path = ROOT / "q3" / "agente_llm.py"
+            if script_path.exists():
+                subprocess.run([sys.executable, str(script_path), "--child-process"])
+            else:
+                print_retro(f"[ERRO]: Arquivo não encontrado: {script_path}", VERMELHO_CLARO)
+                time.sleep(2)
             
-            print_retro("\n[AVISO]: Módulo da Questão 3 ainda em desenvolvimento.", VERMELHO_CLARO)
-            time.sleep(1.5)
+            # print_retro("\n[AVISO]: Módulo da Questão 3 ainda em desenvolvimento.", VERMELHO_CLARO)
+            # time.sleep(1.5)
         elif opcao == "4":
             print(f"\n{LARANJA}SISTEMA DESENVOLVIDO PELA EQUIPE MECHAPE (IA 2026.1):{RESET}")
             print_retro(f"{VERMELHO_CLARO}  • Arquitetura & Motor (P1): Manu", VERMELHO_CLARO)
