@@ -17,6 +17,9 @@ Como instalar o Ollama (opcional):
    1. Baixe em https://ollama.com/download
    2. No terminal:  ollama pull llama3.2
    3. Deixe o Ollama aberto e rode este script.
+
+   para rodar modo interativo:  python agente_llm.py -> voce escolhe seus proprios objetivos
+   para rodar demo:             python agente_llm.py demo -> roda 4 objetivos predefinidos
 """
 
 import json
@@ -25,9 +28,8 @@ import math
 import urllib.request
 import datetime
 
-# ============================================================
+
 # 1. FERRAMENTAS (o que o agente pode "fazer no mundo")
-# ============================================================
 # Cada ferramenta é uma função Python. O agente escolhe qual chamar.
 
 def ferramenta_calculadora(expressao: str) -> str:
@@ -117,9 +119,8 @@ def descricao_ferramentas() -> str:
     return "\n".join(linhas)
 
 
-# ============================================================
+
 # 2. CAMADA DO LLM (Ollama com fallback simulado)
-# ============================================================
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 MODELO = "llama3.2"
@@ -253,9 +254,8 @@ def sintetizar_simulado(objetivo: str, historico: list) -> str:
     return "Com base nas etapas executadas: " + "; ".join(partes) + "."
 
 
-# ============================================================
+
 # 3. O AGENTE (ciclo ReAct)
-# ============================================================
 
 class AgenteTarefas:
     def __init__(self, max_passos=6, verbose=True):
@@ -306,9 +306,8 @@ class AgenteTarefas:
         return final
 
 
-# ============================================================
+
 # 4. DEMONSTRAÇÃO / INTERAÇÃO
-# ============================================================
 
 def status_llm():
     if chamar_ollama("responda apenas: ok") is not None:
