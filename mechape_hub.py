@@ -21,23 +21,6 @@ def print_retro(texto: str, cor: str = LARANJA, atraso: float = 0.005, nova_linh
     if nova_linha:
         print()
 
-# def exibir_cabecalho():
-#     print(LARANJA)
-#     print(' 888b     d888                   888            d8888 8888888b.  8888888888    ▒▒▒▒▒▄██████████▄▒▒▒▒▒')
-#     print(' 8888b   d8888                   888           d88888 888   Y88b 888           ▒▒▒▄██████████████▄▒▒▒')
-#     print(' 88888b.d88888                   888          d88P888 888    888 888           ▒▒██████████████████▒▒')
-#     print(' 888Y88888P888  .d88b.  .d8888b. 88888b.     d88P 888 888   d88P 8888888       ▒▐███▀▀▀▀▀██▀▀▀▀▀███▌▒')
-#     print(' 888 Y888P 888 d8P  Y8bd88P  Y88b888 "88b   d88P  888 8888888P"  888           ▒███▒▒▌■▐▒▒▒▒▌■▐▒▒███▒')
-#     print(' 888  Y8P  888 88888888888       888  888  d88P   888 888        888           ▒▐██▄▒▀▀▀▒▒▒▒▀▀▀▒▄██▌▒')
-#     print(' 888       888 Y8b.    Y88b  d88P888  888 d8888888888 888        888           ▒▒▀████▒▄▄▒▒▄▄▒████▀▒▒')
-#     print(' 888       888  "Y8888  "Y8888P" 888  888d88P     888 888        8888888888    ▒▒▐███▒▒▒▀▒▒▀▒▒▒███▌▒▒')
-#     print('                                                                               ▒▒███▒▒▒▒▒▒▒▒▒▒▒▒███▒▒')
-#     print('                                                                               ▒▒▒██▒▒▀▀▀▀▀▀▀▀▒▒██▒▒▒')
-#     print('                                                                               ▒▒▒▐██▄▒▒▒▒▒▒▒▒▄██▌▒▒▒')
-#     print('                                                                               ▒▒▒▒▀████████████▀▒▒▒▒')
-#     print("                                              team questions hub                           ")
-#     print(RESET)
-
 def exibir_cabecalho():
     print(LARANJA)
     print(' 888b     d888                   888            d8888 8888888b.  8888888888 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀')
@@ -67,7 +50,7 @@ def menu_principal():
         
         print(f"{LARANJA}╔══════════════════════════════════════════════════════════════╗{RESET}")
         print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}1. EXECUTAR QUESTÃO 1 (Motor de Inferência){RESET}                 {LARANJA}║{RESET}")
-        print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}2. EXECUTAR QUESTÃO 2 (Identificador de Personagens){RESET}        {LARANJA}║{RESET}")
+        print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}2. EXECUTAR QUESTÃO 2 (Sistemas A e B){RESET}                      {LARANJA}║{RESET}")
         print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}3. EXECUTAR QUESTÃO 3 (Agente LLM){RESET}                          {LARANJA}║{RESET}")
         print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}4. EXIBIR CRÉDITOS DA EQUIPE{RESET}                                {LARANJA}║{RESET}")
         print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}0. DESLIGAR TERMINAL (SAIR){RESET}                                 {LARANJA}║{RESET}")
@@ -85,15 +68,47 @@ def menu_principal():
             else:
                 print_retro(f"[ERRO]: Arquivo não encontrado: {script_path}", VERMELHO_CLARO)
                 time.sleep(2)
+                
         elif opcao == "2":
-            print_retro("\n[SISTEMA]: Inicializando Questão 2...", LARANJA)
-            time.sleep(0.5)
-            script_path = ROOT / "q2" / "q2-1.py" / "interface.py"
-            if script_path.exists():
-                subprocess.run([sys.executable, str(script_path), "--child-process"])
-            else:
-                print_retro(f"[ERRO]: Arquivo não encontrado: {script_path}", VERMELHO_CLARO)
-                time.sleep(2)
+            while True:
+                sys.stdout.write("\033[H\033[2J")
+                exibir_cabecalho()
+                print(f"{LARANJA}╔══════════════════════════════════════════════════════════════╗{RESET}")
+                print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}SUBMENU - QUESTÃO 2{RESET}                                         {LARANJA}║{RESET}")
+                print(f"{LARANJA}╠══════════════════════════════════════════════════════════════╣{RESET}")
+                print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}1. Sistema A (Identificador Akinator){RESET}                       {LARANJA}║{RESET}")
+                print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}2. Sistema B (Recomendação/Diagnóstico){RESET}                     {LARANJA}║{RESET}")
+                print(f"{LARANJA}║{RESET}  {VERMELHO_CLARO}0. VOLTAR{RESET}                                                   {LARANJA}║{RESET}")
+                print(f"{LARANJA}╚══════════════════════════════════════════════════════════════╝{RESET}")
+                print()
+                
+                sub_opcao = input(f"{LARANJA}SELECIONE O SISTEMA DA QUESTÃO 2 > {RESET}").strip()
+                
+                if sub_opcao == "1":
+                    print_retro("\n[SISTEMA]: Inicializando Akinator (Sistema A)...", LARANJA)
+                    time.sleep(0.5)
+                    script_path = ROOT / "q2" / "q2-1.py" / "interface.py"
+                    if script_path.exists():
+                        subprocess.run([sys.executable, str(script_path), "--child-process"])
+                    else:
+                        print_retro(f"[ERRO]: Arquivo não encontrado: {script_path}", VERMELHO_CLARO)
+                        time.sleep(2)
+                elif sub_opcao == "2":
+                    print_retro("\n[SISTEMA]: Inicializando Recomendação/Diagnóstico (Sistema B)...", LARANJA)
+                    time.sleep(0.5)
+                    # Aponta para o script de recomendação na pasta q2-2.py
+                    script_path = ROOT / "q2" / "q2-2.py" / "recomendacao.py" 
+                    if script_path.exists():
+                        subprocess.run([sys.executable, str(script_path), "--child-process"])
+                    else:
+                        print_retro(f"[ERRO]: Arquivo não encontrado: {script_path}", VERMELHO_CLARO)
+                        time.sleep(2)
+                elif sub_opcao == "0":
+                    break
+                else:
+                    print_retro("[ERRO]: Código de instrução inválido.", VERMELHO_CLARO)
+                    time.sleep(1)
+
         elif opcao == "3":
             print_retro("\n[SISTEMA]: Inicializando Questão 3...", LARANJA)
             time.sleep(0.5)
@@ -103,9 +118,7 @@ def menu_principal():
             else:
                 print_retro(f"[ERRO]: Arquivo não encontrado: {script_path}", VERMELHO_CLARO)
                 time.sleep(2)
-            
-            # print_retro("\n[AVISO]: Módulo da Questão 3 ainda em desenvolvimento.", VERMELHO_CLARO)
-            # time.sleep(1.5)
+                
         elif opcao == "4":
             print(f"\n{LARANJA}SISTEMA DESENVOLVIDO PELA EQUIPE MECHAPE (IA 2026.1):{RESET}")
             print_retro(f"{VERMELHO_CLARO}  • Arquitetura & Motor (P1): Manu", VERMELHO_CLARO)
@@ -113,6 +126,7 @@ def menu_principal():
             print_retro(f"{VERMELHO_CLARO}  • Interface & Explicação (P3): João Felipe", VERMELHO_CLARO)
             print_retro(f"{VERMELHO_CLARO}  • Diagnósticos Específicos (P4/P5): Lucas & Rayssa{RESET}\n", VERMELHO_CLARO)
             input(f"{LARANJA}Pressione [ENTER] para continuar...{RESET}")
+            
         elif opcao == "0":
             print_retro("\n[SISTEMA]: Encerrando Hub... Desligando terminal. Adeus.", LARANJA)
             time.sleep(1)
