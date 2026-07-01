@@ -8,6 +8,7 @@ candidatos — o que torna o sistema tolerante a respostas ambíguas.
 from __future__ import annotations
 import json
 import math
+import random
 from pathlib import Path
 
 
@@ -18,14 +19,16 @@ class Akinator:
     MIN_QUESTIONS: int = 7              # Mínimo de perguntas antes de qualquer palpite
     DOMINANCE_RATIO: float = 8.0        # Palpita se o líder for N× mais provável que o 2º
     DOMINANCE_MIN_CONF: float = 0.50    # Confiança mínima para o palpite por dominância
+    ENTROPIA_TOLERANCIA: float = 0.01   # Faixa de empate para sortear entre as melhores perguntas
 
-    def __init__(self, kb_path: str | Path | None = None):
+    def __init__(self, kb_path: str | Path | None = None, seed: int | None = None):
         if kb_path is None:
             kb_path = Path(__file__).parent / "knowledge_base.json"
         with open(kb_path, "r", encoding="utf-8") as f:
             self.kb = json.load(f)
         self.attributes: list[dict] = self.kb["attributes"]
         self.all_characters: list[dict] = self.kb["characters"]
+        self._rng = random.Random(seed)
         self.reset()
 
     def reset(self) -> None:
@@ -89,7 +92,7 @@ class Akinator:
         return pular
 
     def proxima_pergunta(self) -> dict | None:
-        """Retorna o atributo não respondido com maior ganho de informação esperado."""
+        """Sorteia entre os atributos de maior ganho de informação (evita ordem sempre igual)."""
         pular = self._atributos_implicitos()
         nao_respondidos = [
             a for a in self.attributes
@@ -97,7 +100,10 @@ class Akinator:
         ]
         if not nao_respondidos:
             return None
-        return max(nao_respondidos, key=lambda a: self._entropia_ponderada(a["id"]))
+        entropias = {a["id"]: self._entropia_ponderada(a["id"]) for a in nao_respondidos}
+        melhor = max(entropias.values())
+        candidatas = [a for a in nao_respondidos if entropias[a["id"]] >= melhor - self.ENTROPIA_TOLERANCIA]
+        return self._rng.choice(candidatas)
 
     def responder(self, attr_id: str, resposta: str) -> None:
         """
@@ -128,17 +134,36 @@ class Akinator:
         norm = self._normalized()
         return max(norm.values()) if norm else 0.0
 
+    def _distingue(self, c1: dict, c2: dict) -> str | None:
+        """ID de um atributo ainda não perguntado que separaria c1 de c2, se existir."""
+        pular = self._atributos_implicitos()
+        for a in self.attributes:
+            aid = a["id"]
+            if aid in self.answered or aid in pular:
+                continue
+            if c1["attributes"].get(aid) != c2["attributes"].get(aid):
+                return aid
+        return None
+
     def pode_adivinhar(self) -> bool:
-        """Palpita (após o mínimo de perguntas) por confiança absoluta alta ou dominância sobre o 2º."""
+        """
+        Palpita por confiança absoluta alta, ou por dominância sobre o 2º colocado —
+        mas a dominância só vale se não sobrar pergunta capaz de separar os dois.
+        """
         if self.total_perguntas() < self.MIN_QUESTIONS:
             return False
         top2 = self.top_n(2)
-        conf = top2[0][1] if top2 else 0.0
+        if not top2:
+            return False
+        conf = top2[0][1]
         if conf >= self.CONFIDENCE_THRESHOLD:
             return True
-        if len(top2) >= 2 and top2[1][1] > 0 and conf >= self.DOMINANCE_MIN_CONF:
-            return (top2[0][1] / top2[1][1]) >= self.DOMINANCE_RATIO
-        return False
+        if len(top2) < 2 or top2[1][1] <= 0 or conf < self.DOMINANCE_MIN_CONF:
+            return False
+        dominante = (top2[0][1] / top2[1][1]) >= self.DOMINANCE_RATIO
+        if not dominante:
+            return False
+        return self._distingue(top2[0][0], top2[1][0]) is None
 
     def sem_candidatos(self) -> bool:
         """True apenas se todos os scores colapsaram a valores ínfimos."""
