@@ -59,8 +59,8 @@
     },
     {
       "id": "A10",
-      "attribute": "tem_visual_iconico",
-      "question": "O personagem tem um traje, acessório ou visual absolutamente icônico e reconhecível?"
+      "attribute": "tem_cabelo",
+      "question": "O personagem tem cabelo (não é careca)?"
     },
     {
       "id": "A11",
@@ -153,7 +153,7 @@
       "description": "Lorde Sith mascarado do Império Galáctico",
       "attributes": {
         "A01": true,  "A02": false, "A03": true,  "A04": false, "A05": false,
-        "A06": true,  "A07": true,  "A08": true,  "A09": true,  "A10": true,
+        "A06": true,  "A07": true,  "A08": true,  "A09": true,  "A10": false,
         "A11": false, "A12": true,  "A13": false, "A14": false, "A15": true,
         "A16": true,  "A17": true,  "A18": true,  "A19": false, "A20": true,
         "A21": false, "A22": false, "A23": true,  "A24": false, "A25": true,
@@ -168,7 +168,7 @@
       "description": "Bruxinha mais inteligente de Hogwarts",
       "attributes": {
         "A01": true,  "A02": true,  "A03": true,  "A04": false, "A05": false,
-        "A06": false, "A07": false, "A08": true,  "A09": false, "A10": false,
+        "A06": false, "A07": false, "A08": true,  "A09": false, "A10": true,
         "A11": false, "A12": true,  "A13": false, "A14": true,  "A15": false,
         "A16": false, "A17": false, "A18": false, "A19": true,  "A20": false,
         "A21": false, "A22": false, "A23": false, "A24": false, "A25": false,
@@ -213,9 +213,9 @@
       "description": "Hobbit portador do Um Anel destinado a destruí-lo",
       "attributes": {
         "A01": false, "A02": true,  "A03": false, "A04": false, "A05": false,
-        "A06": false, "A07": true,  "A08": false, "A09": true,  "A10": false,
+        "A06": false, "A07": true,  "A08": false, "A09": true,  "A10": true,
         "A11": false, "A12": false, "A13": false, "A14": true,  "A15": false,
-        "A16": false, "A17": false, "A18": true,  "A19": true,  "A20": true,
+        "A16": false, "A17": false, "A18": false, "A19": true,  "A20": true,
         "A21": false, "A22": false, "A23": false, "A24": false, "A25": false,
         "A26": false
       }
@@ -243,7 +243,7 @@
       "description": "Professor de química que se torna um poderoso traficante",
       "attributes": {
         "A01": true,  "A02": false, "A03": false, "A04": false, "A05": false,
-        "A06": true,  "A07": true,  "A08": false, "A09": true,  "A10": true,
+        "A06": true,  "A07": true,  "A08": false, "A09": true,  "A10": false,
         "A11": false, "A12": true,  "A13": true,  "A14": false, "A15": false,
         "A16": false, "A17": true,  "A18": true,  "A19": false, "A20": true,
         "A21": true,  "A22": false, "A23": false, "A24": false, "A25": false,
@@ -288,7 +288,7 @@
       "description": "Menina com poderes de telecinese fugida do laboratório",
       "attributes": {
         "A01": true,  "A02": true,  "A03": true,  "A04": false, "A05": false,
-        "A06": false, "A07": false, "A08": true,  "A09": false, "A10": true,
+        "A06": false, "A07": false, "A08": true,  "A09": false, "A10": false,
         "A11": false, "A12": false, "A13": false, "A14": false, "A15": true,
         "A16": true,  "A17": false, "A18": true,  "A19": true,  "A20": true,
         "A21": false, "A22": false, "A23": true,  "A24": false, "A25": false,
@@ -333,7 +333,7 @@
       "description": "Herói careca que derrota qualquer inimigo com um único soco",
       "attributes": {
         "A01": true,  "A02": true,  "A03": true,  "A04": true,  "A05": true,
-        "A06": true,  "A07": false, "A08": false, "A09": true,  "A10": true,
+        "A06": true,  "A07": false, "A08": false, "A09": true,  "A10": false,
         "A11": true,  "A12": false, "A13": false, "A14": false, "A15": false,
         "A16": true,  "A17": false, "A18": true,  "A19": false, "A20": true,
         "A21": false, "A22": false, "A23": true,  "A24": false, "A25": false,
@@ -438,7 +438,7 @@
       "description": "O Titã Louco que busca eliminar metade da vida no universo pelas Joias do Infinito",
       "attributes": {
         "A01": false, "A02": false, "A03": true,  "A04": false, "A05": false,
-        "A06": true,  "A07": false, "A08": true,  "A09": true,  "A10": true,
+        "A06": true,  "A07": false, "A08": true,  "A09": true,  "A10": false,
         "A11": false, "A12": true,  "A13": false, "A14": false, "A15": true,
         "A16": true,  "A17": true,  "A18": true,  "A19": false, "A20": true,
         "A21": false, "A22": false, "A23": false, "A24": true,  "A25": false,
@@ -453,7 +453,7 @@
       "description": "Esponja do mar otimista e trabalhador do Siri Cascudo em Fundo do Mar",
       "attributes": {
         "A01": false, "A02": true,  "A03": false, "A04": true,  "A05": false,
-        "A06": false, "A07": false, "A08": false, "A09": true,  "A10": true,
+        "A06": false, "A07": false, "A08": false, "A09": true,  "A10": false,
         "A11": true,  "A12": false, "A13": false, "A14": false, "A15": false,
         "A16": true,  "A17": false, "A18": false, "A19": true,  "A20": false,
         "A21": false, "A22": false, "A23": false, "A24": false, "A25": false,
@@ -468,7 +468,7 @@
       "description": "Pai de família preguiçoso e trapalhão de Springfield",
       "attributes": {
         "A01": true,  "A02": true,  "A03": false, "A04": true,  "A05": false,
-        "A06": true,  "A07": false, "A08": false, "A09": true,  "A10": true,
+        "A06": true,  "A07": false, "A08": false, "A09": true,  "A10": false,
         "A11": true,  "A12": false, "A13": true,  "A14": false, "A15": false,
         "A16": true,  "A17": false, "A18": false, "A19": false, "A20": true,
         "A21": false, "A22": false, "A23": false, "A24": false, "A25": false,
@@ -498,7 +498,7 @@
       "description": "Último airbender e Avatar responsável por manter a paz entre as nações",
       "attributes": {
         "A01": true,  "A02": true,  "A03": true,  "A04": true,  "A05": false,
-        "A06": false, "A07": false, "A08": true,  "A09": true,  "A10": true,
+        "A06": false, "A07": false, "A08": true,  "A09": true,  "A10": false,
         "A11": false, "A12": false, "A13": false, "A14": true,  "A15": false,
         "A16": true,  "A17": false, "A18": false, "A19": true,  "A20": true,
         "A21": false, "A22": false, "A23": false, "A24": false, "A25": false,
@@ -528,7 +528,7 @@
       "description": "Espartano semideus que assassinou os deuses gregos em busca de vingança",
       "attributes": {
         "A01": true,  "A02": true,  "A03": true,  "A04": false, "A05": false,
-        "A06": true,  "A07": true,  "A08": true,  "A09": true,  "A10": true,
+        "A06": true,  "A07": true,  "A08": true,  "A09": true,  "A10": false,
         "A11": false, "A12": false, "A13": false, "A14": true,  "A15": false,
         "A16": true,  "A17": false, "A18": true,  "A19": false, "A20": true,
         "A21": false, "A22": false, "A23": true,  "A24": false, "A25": false,
@@ -543,7 +543,7 @@
       "description": "O Bruxo das Trevas mais poderoso da história, inimigo mortal de Harry Potter",
       "attributes": {
         "A01": true,  "A02": false, "A03": true,  "A04": false, "A05": false,
-        "A06": true,  "A07": true,  "A08": true,  "A09": true,  "A10": true,
+        "A06": true,  "A07": true,  "A08": true,  "A09": true,  "A10": false,
         "A11": false, "A12": true,  "A13": false, "A14": true,  "A15": false,
         "A16": true,  "A17": true,  "A18": true,  "A19": false, "A20": true,
         "A21": false, "A22": false, "A23": true,  "A24": false, "A25": false,
@@ -560,7 +560,7 @@
         "A01": true,  "A02": true,  "A03": false, "A04": false, "A05": false,
         "A06": true,  "A07": true,  "A08": true,  "A09": true,  "A10": true,
         "A11": false, "A12": false, "A13": false, "A14": true,  "A15": false,
-        "A16": false, "A17": false, "A18": false, "A19": false, "A20": false,
+        "A16": false, "A17": false, "A18": true,  "A19": false, "A20": false,
         "A21": false, "A22": false, "A23": false, "A24": false, "A25": false,
         "A26": true
       }
@@ -582,17 +582,17 @@
     },
     {
       "id": "C30",
-      "name": "James Bond",
-      "origin": "007",
-      "type": "filme",
-      "description": "Agente secreto britânico licenciado para matar a serviço do MI6",
+      "name": "Mario",
+      "origin": "Super Mario Bros.",
+      "type": "jogo",
+      "description": "Encanador italiano que resgata a Princesa Peach com a ajuda de power-ups mágicos",
       "attributes": {
-        "A01": true,  "A02": true,  "A03": false, "A04": false, "A05": false,
-        "A06": true,  "A07": true,  "A08": false, "A09": true,  "A10": true,
-        "A11": false, "A12": true,  "A13": true,  "A14": false, "A15": false,
-        "A16": false, "A17": false, "A18": true,  "A19": false, "A20": false,
-        "A21": true,  "A22": true,  "A23": false, "A24": false, "A25": false,
-        "A26": false
+        "A01": true,  "A02": true,  "A03": true,  "A04": false, "A05": false,
+        "A06": true,  "A07": false, "A08": true,  "A09": true,  "A10": true,
+        "A11": true,  "A12": false, "A13": false, "A14": true,  "A15": false,
+        "A16": false, "A17": false, "A18": false, "A19": false, "A20": true,
+        "A21": false, "A22": false, "A23": false, "A24": false, "A25": false,
+        "A26": true
       }
     },
     {

@@ -2,8 +2,11 @@ venv
 .agents
 .vscode
 
-# Byte-compiled / optimized / DLL files 
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Log de sugestões de novos personagens gerado em runtime pelo Akinator (Q2.1)
+sugestoes_personagens.json
