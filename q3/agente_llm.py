@@ -86,6 +86,10 @@ def ferramenta_base_conhecimento(pergunta: str) -> str:
         "maior planeta": "Júpiter é o maior planeta do Sistema Solar.",
         "velocidade da luz": "A velocidade da luz é aproximadamente 299.792 km/s.",
         "autor dom casmurro": "Dom Casmurro foi escrito por Machado de Assis.",
+        "autor sherlock holmes": "Sherlock Holmes foi criado pelo escritor britânico Arthur Conan Doyle.",
+        "sherlock holmes original": "As histórias originais de Sherlock Holmes foram escritas por Arthur Conan Doyle.",
+        "jojos bizarre adventure protagonista": "JoJo's Bizarre Adventure tem vários protagonistas; Jotaro Kujo costuma ser um dos mais famosos.",
+        "jojo bizarre adventure protagonista": "JoJo's Bizarre Adventure tem vários protagonistas; Jotaro Kujo costuma ser um dos mais famosos.",
         "fórmula da água": "A fórmula química da água é H2O.",
     }
     p = pergunta.lower().strip()
@@ -94,8 +98,9 @@ def ferramenta_base_conhecimento(pergunta: str) -> str:
         if chave in p:
             return resposta
     # 2) correspondência por sobreposição de palavras-chave
-    stop = {"qual", "é", "e", "o", "a", "de", "do", "da", "me", "diga", "que",
-            "the", "autor", "capital", "fórmula", "formula"}
+    stop = {"qual", "quem", "é", "e", "o", "a", "de", "do", "da", "me", "diga", "que",
+            "the", "autor", "capital", "fórmula", "formula", "livro", "original",
+            "serie", "série", "animada", "japonesa", "mais", "famoso"}
     palavras_p = {w for w in re.findall(r"\w+", p) if w not in stop}
     melhor, score = None, 0
     for chave, resposta in fatos.items():
@@ -210,6 +215,36 @@ def parse_resposta_llm(texto: str) -> dict:
                 "resposta_final": texto.strip()[:300]}
 
 
+def decidir_acao_obrigatoria(objetivo: str, historico: list) -> dict | None:
+    """Resolve rotas simples antes de consultar o LLM.
+
+    O LLM ainda participa das tarefas abertas, mas pedidos claros de horário
+    não precisam ficar vulneráveis a repetição de ferramenta.
+    """
+    obj = objetivo.lower()
+    if not re.search(r"\b(hoje|data|hora|hor[áa]rio|dia|diferen[çc]a|subtrai|subtraia)\b", obj):
+        return None
+
+    entradas = [h["entrada"].lower() for h in historico if h["acao"] == "data_hora"]
+    observacoes = [h["observacao"].lower() for h in historico if h["acao"] == "data_hora"]
+    tem_brasil = "brasil" in entradas or any("local/brasil" in obs for obs in observacoes)
+    tem_japao = "japão" in entradas or "japao" in entradas or any("japão" in obs or "japao" in obs for obs in observacoes)
+
+    if "brasil" in obj and not tem_brasil:
+        return {"pensamento": "Preciso saber o horário atual do Brasil.",
+                "acao": "data_hora", "entrada": "Brasil"}
+
+    if ("japão" in obj or "japao" in obj) and not tem_japao:
+        return {"pensamento": "Preciso saber o horário atual do Japão.",
+                "acao": "data_hora", "entrada": "Japão"}
+
+    if not historico and re.search(r"\b(hoje|data|hora|hor[áa]rio|dia)\b", obj):
+        return {"pensamento": "Preciso saber a data/hora atual.",
+                "acao": "data_hora", "entrada": ""}
+
+    return None
+
+
 # ---------- MODO SIMULADO (sem LLM) ----------
 
 def decisao_simulada(objetivo: str, historico: list) -> dict:
@@ -218,6 +253,15 @@ def decisao_simulada(objetivo: str, historico: list) -> dict:
     obj = objetivo.lower()
     ja_feitas_acoes = [h["acao"] for h in historico]
     ja_feitas_entradas = [h["entrada"].lower() for h in historico]
+
+    resposta_pronta = tentar_responder_com_historico(objetivo, historico)
+    if resposta_pronta:
+        return {"pensamento": "Já tenho informações suficientes para responder.",
+                "resposta_final": resposta_pronta}
+
+    acao_obrigatoria = decidir_acao_obrigatoria(objetivo, historico)
+    if acao_obrigatoria:
+        return acao_obrigatoria
 
     # detecta necessidade de cálculo
     if re.search(r"\d+\s*[\+\-\*/x×]\s*\d+|raiz|calcul", obj) and "calculadora" not in ja_feitas_acoes:
@@ -231,7 +275,7 @@ def decisao_simulada(objetivo: str, historico: list) -> dict:
                 "acao": "conversor_moeda", "entrada": extrair_conversao(objetivo)}
 
     # detecta pergunta de data/hora - (CORREÇÃO DE REGEX E SUPORTE A MÚLTIPLOS LOCAIS)
-    if re.search(r"\b(hoje|data|hora|hor[áa]rio|dia)\b", obj):
+    if re.search(r"\b(hoje|data|hora|hor[áa]rio|dia|diferen[çc]a|subtrai|subtraia)\b", obj):
         if "brasil" in obj and "brasil" not in ja_feitas_entradas:
             return {"pensamento": "Preciso saber o horário atual do Brasil.",
                     "acao": "data_hora", "entrada": "Brasil"}
@@ -246,7 +290,7 @@ def decisao_simulada(objetivo: str, historico: list) -> dict:
                     "acao": "data_hora", "entrada": ""}
 
     # detecta pergunta factual
-    if re.search(r"\b(capital|planeta|autor|f[óo]rmula|velocidade|casmurro|luz|água|agua)\b", obj) and "base_conhecimento" not in ja_feitas_acoes:
+    if re.search(r"\b(capital|planeta|autor|protagonista|jojo|jojos|sherlock|f[óo]rmula|velocidade|casmurro|luz|água|agua)\b", obj) and "base_conhecimento" not in ja_feitas_acoes:
         return {"pensamento": "É uma pergunta de conhecimento geral.",
                 "acao": "base_conhecimento", "entrada": objetivo}
 
@@ -284,6 +328,10 @@ def extrair_conversao(texto: str) -> str:
 def sintetizar_simulado(objetivo: str, historico: list) -> str:
     if not historico:
         return "Não foram necessárias ferramentas para esta tarefa."
+
+    resposta_pronta = tentar_responder_com_historico(objetivo, historico)
+    if resposta_pronta:
+        return resposta_pronta
         
     # Correção: Calcular a diferença de forma ativa caso pedido no modo simulado/anti-loop
     obj_lower = objetivo.lower()
@@ -303,6 +351,46 @@ def sintetizar_simulado(objetivo: str, historico: list) -> str:
     return "Com base nas etapas executadas: " + "; ".join(partes) + "."
 
 
+def tentar_responder_com_historico(objetivo: str, historico: list) -> str | None:
+    """Finaliza respostas simples assim que as observações já bastam."""
+    if not historico:
+        return None
+
+    obj_lower = objetivo.lower()
+
+    if re.search(r"\b(diferen[çc]a|subtrai|subtraia|compar)\b", obj_lower) and re.search(r"\b(hora|hor[áa]rio)\b", obj_lower):
+        horarios = []
+        for h in historico:
+            if h["acao"] == "data_hora":
+                match = re.search(r"(\d{2})/(\d{2})/(\d{4})\s+(\d{2}):(\d{2}).*\(([^()]*)\)$", h["observacao"])
+                if match:
+                    dia, mes, ano, hora, minuto, local = match.groups()
+                    dt = datetime.datetime(int(ano), int(mes), int(dia), int(hora), int(minuto))
+                    horarios.append((local, dt))
+
+        if len(horarios) >= 2:
+            diff_horas = abs((horarios[1][1] - horarios[0][1]).total_seconds()) / 3600
+            if diff_horas > 12:
+                diff_horas = 24 - diff_horas
+            diff_txt = f"{diff_horas:.0f}" if diff_horas.is_integer() else f"{diff_horas:.1f}"
+            locais = " e ".join(local for local, _ in horarios[:2])
+            return f"A diferença de horário entre {locais} é de aproximadamente {diff_txt} horas."
+        return None
+
+    ultima = historico[-1]["observacao"]
+
+    if "Não encontrei esse fato" not in ultima and any(h["acao"] == "base_conhecimento" for h in historico):
+        return ultima
+
+    if re.search(r"\b(hoje|data|hora|hor[áa]rio|dia)\b", obj_lower) and any(h["acao"] == "data_hora" for h in historico):
+        return ultima
+
+    if any(h["acao"] in ("calculadora", "conversor_moeda") for h in historico):
+        return ultima
+
+    return None
+
+
 # ============================================================
 # 3. O AGENTE (ciclo ReAct)
 # ============================================================
@@ -319,7 +407,9 @@ class AgenteTarefas:
         acoes_repetidas = set()
 
         for passo in range(1, self.max_passos + 1):
-            decisao = llm_decide(objetivo, historico)
+            decisao = decidir_acao_obrigatoria(objetivo, historico)
+            if decisao is None:
+                decisao = llm_decide(objetivo, historico)
 
             # caso o agente decida finalizar
             if "resposta_final" in decisao:
@@ -361,6 +451,12 @@ class AgenteTarefas:
                 "pensamento": decisao.get("pensamento", ""),
                 "acao": acao, "entrada": entrada, "observacao": observacao,
             })
+
+            resposta_pronta = tentar_responder_com_historico(objetivo, historico)
+            if resposta_pronta:
+                if self.verbose:
+                    print(f"\n>>> RESPOSTA FINAL: {resposta_pronta}")
+                return resposta_pronta
 
         # se esgotou os passos, sintetiza o que tem
         final = sintetizar_simulado(objetivo, historico)
