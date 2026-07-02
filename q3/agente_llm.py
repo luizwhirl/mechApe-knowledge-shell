@@ -23,7 +23,9 @@ import json
 import re
 import math
 import urllib.request
+import urllib.parse
 import datetime
+import html
 
 # ============================================================
 # 1. FERRAMENTAS (o que o agente pode "fazer no mundo")
@@ -79,6 +81,74 @@ def ferramenta_conversor_moeda(consulta: str) -> str:
         return "Formato inválido. Use: 'VALOR MOEDA_ORIGEM MOEDA_DESTINO', ex.: '100 USD BRL'"
 
 
+def limpar_html(texto: str) -> str:
+    texto = re.sub(r"<.*?>", " ", texto, flags=re.DOTALL)
+    texto = html.unescape(texto)
+    return re.sub(r"\s+", " ", texto).strip()
+
+
+def normalizar_url_ddg(url: str) -> str:
+    url = html.unescape(url)
+    if "duckduckgo.com/l/?" not in url:
+        return url
+    qs = urllib.parse.parse_qs(urllib.parse.urlparse(url).query)
+    return qs.get("uddg", [url])[0]
+
+
+def ferramenta_busca_online(consulta: str) -> str:
+    """Busca informações atuais na web e retorna trechos para o LLM sintetizar."""
+    try:
+        url = "https://lite.duckduckgo.com/lite/?" + urllib.parse.urlencode({"q": consulta})
+        req = urllib.request.Request(url, headers={
+            "User-Agent": "Mozilla/5.0 (compatible; AgenteTarefas/1.0)"
+        })
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            pagina = resp.read().decode("utf-8", errors="replace")
+
+        blocos = re.findall(
+            r'<a[^>]+class="result__a"[^>]+href="([^"]+)"[^>]*>(.*?)</a>.*?'
+            r'<a[^>]+class="result__snippet"[^>]*>(.*?)</a>',
+            pagina,
+            flags=re.DOTALL,
+        )
+        if not blocos:
+            blocos = re.findall(
+                r'<a[^>]+class="result__a"[^>]+href="([^"]+)"[^>]*>(.*?)</a>',
+                pagina,
+                flags=re.DOTALL,
+            )
+            blocos = [(url_resultado, titulo, "") for url_resultado, titulo in blocos]
+        if not blocos:
+            blocos = re.findall(
+                r"<a[^>]+href=\"([^\"]+)\"[^>]+class='result-link'[^>]*>(.*?)</a>.*?"
+                r"<td[^>]+class='result-snippet'[^>]*>(.*?)</td>",
+                pagina,
+                flags=re.DOTALL,
+            )
+        if not blocos:
+            blocos = re.findall(
+                r"<a[^>]+href=\"([^\"]+)\"[^>]+class='result-link'[^>]*>(.*?)</a>",
+                pagina,
+                flags=re.DOTALL,
+            )
+            blocos = [(url_resultado, titulo, "") for url_resultado, titulo in blocos]
+
+        resultados = []
+        for url_resultado, titulo, trecho in blocos[:5]:
+            titulo_limpo = limpar_html(titulo)
+            trecho_limpo = limpar_html(trecho)
+            link = normalizar_url_ddg(url_resultado)
+            if link.startswith("//"):
+                link = "https:" + link
+            resultados.append(f"- {titulo_limpo}\n  {trecho_limpo}\n  Fonte: {link}")
+
+        if not resultados:
+            return "Não encontrei resultados online para essa consulta."
+        return "Resultados online encontrados:\n" + "\n".join(resultados)
+    except Exception as e:
+        return f"Erro ao buscar online: {e}"
+
+
 def ferramenta_base_conhecimento(pergunta: str) -> str:
     """Consulta uma pequena base de fatos local (simula uma busca)."""
     fatos = {
@@ -121,8 +191,10 @@ FERRAMENTAS = {
         "Retorna a data e hora atuais. Entrada: nome do país (ex: 'Brasil', 'Japão') ou vazio."),
     "conversor_moeda": (ferramenta_conversor_moeda,
         "Converte moedas (BRL, USD, EUR, GBP). Entrada: 'VALOR ORIGEM DESTINO', ex.: '100 USD BRL'."),
+    "busca_online": (ferramenta_busca_online,
+        "Busca informações atuais na internet. Use para notícias, agenda, jogos, placares, eventos futuros ou fatos que podem mudar. Entrada: consulta objetiva."),
     "base_conhecimento": (ferramenta_base_conhecimento,
-        "Consulta fatos gerais. Entrada: a pergunta em texto."),
+        "Consulta fatos gerais estáveis e locais. Não use para notícias, agenda, jogos ou eventos futuros. Entrada: a pergunta em texto."),
 }
 
 
@@ -194,6 +266,8 @@ Ferramentas disponíveis:
 {descricao_ferramentas()}
 
 Regra Crítica: NUNCA repita a mesma Ação com a mesma Entrada se já souber a Observação. Se as ferramentas não trouxerem novas informações, retorne imediatamente a resposta_final com o que conseguiu descobrir.{aviso_repeticao}
+Regra de atualidade: para perguntas sobre próximo jogo, agenda, placar, notícias, eventos futuros ou Copa do Mundo em andamento, use busca_online antes de responder. Não use base_conhecimento para isso.
+Data atual do sistema: {datetime.datetime.now().strftime('%d/%m/%Y %H:%M')}
 
 Responda SEMPRE em JSON estrito, em um destes dois formatos:
 {{"pensamento": "...", "acao": "nome_da_ferramenta", "entrada": "..."}}
@@ -215,6 +289,48 @@ def parse_resposta_llm(texto: str) -> dict:
                 "resposta_final": texto.strip()[:300]}
 
 
+def precisa_busca_online(objetivo: str) -> bool:
+    obj = objetivo.lower()
+    termos_atuais = re.search(
+        r"\b(pr[óo]ximo|agenda|jogo|partida|placar|resultado|not[íi]cia|copa do mundo|world cup|2026)\b",
+        obj,
+    )
+    pergunta_evento_futuro = re.search(r"\bquando\s+(ser[áa]|vai|ocorre|acontece)\b", obj)
+    return bool(termos_atuais or pergunta_evento_futuro)
+
+
+def consulta_busca_online(objetivo: str) -> str:
+    obj = objetivo.lower()
+    if "brasil" in obj and re.search(r"\b(jogo|partida|copa do mundo|world cup|2026)\b", obj):
+        return "Brasil próximo jogo Copa do Mundo 2026 data horário adversário"
+    return objetivo
+
+
+def llm_sintetizar_final(objetivo: str, historico: list) -> str | None:
+    if not historico:
+        return None
+
+    hist_txt = ""
+    for h in historico:
+        hist_txt += f"\nAção: {h['acao']}\nEntrada: {h['entrada']}\nObservação:\n{h['observacao']}\n"
+
+    prompt = f"""Você é um agente que responde em português do Brasil.
+Use apenas as observações abaixo como fonte factual. Se houver resultados online conflitantes ou insuficientes, diga isso claramente.
+Quando houver fonte/URL na observação, mencione a fonte de forma curta.
+
+Objetivo do usuário: {objetivo}
+Data atual do sistema: {datetime.datetime.now().strftime('%d/%m/%Y %H:%M')}
+{hist_txt}
+
+Responda em JSON estrito:
+{{"pensamento": "síntese baseada nas observações", "resposta_final": "resposta direta ao usuário"}}"""
+
+    resposta = chamar_ollama(prompt)
+    if resposta is None:
+        return None
+    return parse_resposta_llm(resposta).get("resposta_final")
+
+
 def decidir_acao_obrigatoria(objetivo: str, historico: list) -> dict | None:
     """Resolve rotas simples antes de consultar o LLM.
 
@@ -222,6 +338,10 @@ def decidir_acao_obrigatoria(objetivo: str, historico: list) -> dict | None:
     não precisam ficar vulneráveis a repetição de ferramenta.
     """
     obj = objetivo.lower()
+    if precisa_busca_online(objetivo) and not any(h["acao"] == "busca_online" for h in historico):
+        return {"pensamento": "Preciso consultar informações atuais online antes de responder.",
+                "acao": "busca_online", "entrada": consulta_busca_online(objetivo)}
+
     if not re.search(r"\b(hoje|data|hora|hor[áa]rio|dia|diferen[çc]a|subtrai|subtraia)\b", obj):
         return None
 
@@ -452,6 +572,13 @@ class AgenteTarefas:
                 "acao": acao, "entrada": entrada, "observacao": observacao,
             })
 
+            if acao == "busca_online":
+                resposta_llm = llm_sintetizar_final(objetivo, historico)
+                if resposta_llm:
+                    if self.verbose:
+                        print(f"\n>>> RESPOSTA FINAL: {resposta_llm}")
+                    return resposta_llm
+
             resposta_pronta = tentar_responder_com_historico(objetivo, historico)
             if resposta_pronta:
                 if self.verbose:
@@ -496,7 +623,7 @@ def interativo():
     print("\n" + "=" * 60)
     print("  AGENTE DE TAREFAS — digite um objetivo (ou 'sair')")
     print("  Ferramentas: calculadora, conversor de moeda, data/hora,")
-    print("               base de conhecimento")
+    print("               busca online, base de conhecimento")
     print("=" * 60)
     while True:
         try:
