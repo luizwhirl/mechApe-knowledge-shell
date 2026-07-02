@@ -1,10 +1,11 @@
-# mechape_hub.py
-
 import sys
 import os
 import time
 import subprocess
 from pathlib import Path
+
+if sys.platform == "win32":
+    os.system("") 
 
 ROOT = Path(__file__).resolve().parent
 
@@ -14,10 +15,13 @@ REVERSE = "\033[7m"
 RESET = "\033[0m"
 
 def print_retro(texto: str, cor: str = LARANJA, atraso: float = 0.005, nova_linha: bool = True):
+    sys.stdout.write(cor)
     for caractere in texto:
-        sys.stdout.write(cor + caractere + RESET)
+        sys.stdout.write(caractere)
         sys.stdout.flush()
         time.sleep(atraso)
+    sys.stdout.write(RESET)
+    
     if nova_linha:
         print()
 
