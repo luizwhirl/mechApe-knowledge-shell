@@ -44,11 +44,20 @@ def ferramenta_calculadora(expressao: str) -> str:
         return f"Erro ao calcular: {e}"
 
 
-def ferramenta_data_hora(_: str = "") -> str:
+def ferramenta_data_hora(entrada: str = "") -> str:
     """Retorna a data e hora atuais."""
     agora = datetime.datetime.now()
+    loc_lower = entrada.lower()
+    
+    # Adicionando suporte básico a fusos como "Japão" para dar flexibilidade ao agente
+    if "japão" in loc_lower or "japao" in loc_lower or "tokyo" in loc_lower:
+        agora += datetime.timedelta(hours=12)
+        fuso = " (Japão)"
+    else:
+        fuso = " (Local/Brasil)"
+        
     dias = ["segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo"]
-    return f"{agora.strftime('%d/%m/%Y %H:%M')} ({dias[agora.weekday()]}-feira)"
+    return f"{agora.strftime('%d/%m/%Y %H:%M')} ({dias[agora.weekday()]}-feira){fuso}"
 
 
 def ferramenta_conversor_moeda(consulta: str) -> str:
@@ -104,7 +113,7 @@ FERRAMENTAS = {
     "calculadora": (ferramenta_calculadora,
         "Faz cálculos matemáticos. Entrada: uma expressão como '15*8+raiz(144)'."),
     "data_hora": (ferramenta_data_hora,
-        "Retorna a data e hora atuais. Entrada: vazio."),
+        "Retorna a data e hora atuais. Entrada: nome do país (ex: 'Brasil', 'Japão') ou vazio."),
     "conversor_moeda": (ferramenta_conversor_moeda,
         "Converte moedas (BRL, USD, EUR, GBP). Entrada: 'VALOR ORIGEM DESTINO', ex.: '100 USD BRL'."),
     "base_conhecimento": (ferramenta_base_conhecimento,
@@ -132,7 +141,12 @@ def chamar_ollama(prompt: str) -> str | None:
             "model": MODELO,
             "prompt": prompt,
             "stream": False,
-            "options": {"temperature": 0.2},
+            "format": "json",       # OTIMIZAÇÃO: Força saída rigorosa em JSON (menos chance de quebra)
+            "keep_alive": "5m",     # OTIMIZAÇÃO: Evita recarregar o modelo do disco a cada passo
+            "options": {
+                "temperature": 0.2,
+                "num_predict": 150  # OTIMIZAÇÃO: Limita número de tokens, cortando muito a latência
+            },
         }).encode("utf-8")
         req = urllib.request.Request(OLLAMA_URL, data=dados,
                                      headers={"Content-Type": "application/json"})
@@ -159,13 +173,24 @@ def llm_decide(objetivo: str, historico: list) -> dict:
 
 def montar_prompt(objetivo: str, historico: list) -> str:
     hist_txt = ""
+    acoes_tentadas = []
+    
     for h in historico:
         hist_txt += f"\nPensamento: {h['pensamento']}\nAção: {h['acao']}\nEntrada: {h['entrada']}\nObservação: {h['observacao']}\n"
+        if h['acao']:
+            acoes_tentadas.append(f"{h['acao']} com '{h['entrada']}'")
+            
+    aviso_repeticao = ""
+    if acoes_tentadas:
+        aviso_repeticao = "\nATENÇÃO - Ações JÁ TENTADAS (NÃO as repita!): " + ", ".join(acoes_tentadas)
+
     return f"""Você é um agente que resolve tarefas usando ferramentas.
 Ferramentas disponíveis:
 {descricao_ferramentas()}
 
-Responda SEMPRE em JSON, em um destes dois formatos:
+Regra Crítica: NUNCA repita a mesma Ação com a mesma Entrada se já souber a Observação. Se as ferramentas não trouxerem novas informações, retorne imediatamente a resposta_final com o que conseguiu descobrir.{aviso_repeticao}
+
+Responda SEMPRE em JSON estrito, em um destes dois formatos:
 {{"pensamento": "...", "acao": "nome_da_ferramenta", "entrada": "..."}}
 ou, quando já tiver a resposta:
 {{"pensamento": "...", "resposta_final": "..."}}
@@ -181,7 +206,7 @@ def parse_resposta_llm(texto: str) -> dict:
         m = re.search(r"\{.*\}", texto, re.DOTALL)
         return json.loads(m.group(0))
     except Exception:
-        return {"pensamento": "Não consegui interpretar; encerrando.",
+        return {"pensamento": "Não consegui interpretar o formato JSON. Vou encerrar a tarefa.",
                 "resposta_final": texto.strip()[:300]}
 
 
@@ -191,31 +216,41 @@ def decisao_simulada(objetivo: str, historico: list) -> dict:
     """Imita o raciocínio do agente por heurística, para funcionar sem Ollama.
     Detecta subtarefas no objetivo e as resolve uma a uma."""
     obj = objetivo.lower()
-    ja_feitas = {h["acao"] for h in historico}
+    ja_feitas_acoes = [h["acao"] for h in historico]
+    ja_feitas_entradas = [h["entrada"].lower() for h in historico]
 
     # detecta necessidade de cálculo
-    if re.search(r"\d+\s*[\+\-\*/x×]\s*\d+|raiz|calcul", obj) and "calculadora" not in ja_feitas:
+    if re.search(r"\d+\s*[\+\-\*/x×]\s*\d+|raiz|calcul", obj) and "calculadora" not in ja_feitas_acoes:
         expr = extrair_expressao(objetivo)
         return {"pensamento": "O objetivo envolve uma conta; vou usar a calculadora.",
                 "acao": "calculadora", "entrada": expr}
 
     # detecta conversão de moeda
-    if re.search(r"\b(usd|eur|gbp|d[óo]lar|euro|libra)\b", obj) and "conversor_moeda" not in ja_feitas:
+    if re.search(r"\b(usd|eur|gbp|d[óo]lar|euro|libra)\b", obj) and "conversor_moeda" not in ja_feitas_acoes:
         return {"pensamento": "Há uma conversão de moeda a fazer.",
                 "acao": "conversor_moeda", "entrada": extrair_conversao(objetivo)}
 
-    # detecta pergunta de data/hora
-    if re.search(r"\b(hoje|data|hora|dia)\b", obj) and "data_hora" not in ja_feitas:
-        return {"pensamento": "Preciso saber a data/hora atual.",
-                "acao": "data_hora", "entrada": ""}
+    # detecta pergunta de data/hora - (CORREÇÃO DE REGEX E SUPORTE A MÚLTIPLOS LOCAIS)
+    if re.search(r"\b(hoje|data|hora|hor[áa]rio|dia)\b", obj):
+        if "brasil" in obj and "brasil" not in ja_feitas_entradas:
+            return {"pensamento": "Preciso saber o horário atual do Brasil.",
+                    "acao": "data_hora", "entrada": "Brasil"}
+        
+        if ("japão" in obj or "japao" in obj) and "japão" not in ja_feitas_entradas and "japao" not in ja_feitas_entradas:
+            return {"pensamento": "Preciso saber o horário atual do Japão.",
+                    "acao": "data_hora", "entrada": "Japão"}
+                    
+        # fallback genérico
+        if "data_hora" not in ja_feitas_acoes:
+            return {"pensamento": "Preciso saber a data/hora atual.",
+                    "acao": "data_hora", "entrada": ""}
 
     # detecta pergunta factual
-    if re.search(r"\b(capital|planeta|autor|f[óo]rmula|velocidade|casmurro|luz|água|agua)\b", obj) and "base_conhecimento" not in ja_feitas:
+    if re.search(r"\b(capital|planeta|autor|f[óo]rmula|velocidade|casmurro|luz|água|agua)\b", obj) and "base_conhecimento" not in ja_feitas_acoes:
         return {"pensamento": "É uma pergunta de conhecimento geral.",
                 "acao": "base_conhecimento", "entrada": objetivo}
 
     # nada mais a fazer: sintetiza
-    obs = " ".join(f"{h['acao']}={h['observacao']}" for h in historico)
     return {"pensamento": "Já reuni as informações necessárias.",
             "resposta_final": sintetizar_simulado(objetivo, historico)}
 
@@ -249,6 +284,21 @@ def extrair_conversao(texto: str) -> str:
 def sintetizar_simulado(objetivo: str, historico: list) -> str:
     if not historico:
         return "Não foram necessárias ferramentas para esta tarefa."
+        
+    # Correção: Calcular a diferença de forma ativa caso pedido no modo simulado/anti-loop
+    obj_lower = objetivo.lower()
+    if re.search(r"\b(diferen[çc]a|subtrai)\b", obj_lower) and re.search(r"\b(hora|hor[áa]rio)\b", obj_lower):
+        horas = []
+        for h in historico:
+            if h["acao"] == "data_hora":
+                match = re.search(r"(\d{2}):(\d{2})", h["observacao"])
+                if match:
+                    horas.append(int(match.group(1)))
+        
+        if len(horas) >= 2:
+            diff = abs(horas[0] - horas[1])
+            return f"A diferença de horário é de aproximadamente {diff} horas."
+            
     partes = [f"{h['observacao']}" for h in historico]
     return "Com base nas etapas executadas: " + "; ".join(partes) + "."
 
@@ -266,6 +316,7 @@ class AgenteTarefas:
         if self.verbose:
             print(f"\n{'='*60}\nOBJETIVO: {objetivo}\n{'='*60}")
         historico = []
+        acoes_repetidas = set()
 
         for passo in range(1, self.max_passos + 1):
             decisao = llm_decide(objetivo, historico)
@@ -279,6 +330,18 @@ class AgenteTarefas:
 
             acao = decisao.get("acao")
             entrada = decisao.get("entrada", "")
+            
+            # OTIMIZAÇÃO: Trava Anti-Loop. Impede o LLM de estourar requisições repetidas
+            assinatura_acao = f"{acao}:{entrada}"
+            if assinatura_acao in acoes_repetidas:
+                if self.verbose:
+                    print(f"\n[Passo {passo}] Agente repetiu a mesma ação ('{acao}' com '{entrada}'). Forçando encerramento para evitar loop.")
+                final = sintetizar_simulado(objetivo, historico)
+                if self.verbose:
+                    print(f"\n>>> RESPOSTA FINAL (Anti-Loop): {final}")
+                return final
+            
+            acoes_repetidas.add(assinatura_acao)
 
             if self.verbose:
                 print(f"\n[Passo {passo}] Pensamento: {decisao.get('pensamento','')}")
